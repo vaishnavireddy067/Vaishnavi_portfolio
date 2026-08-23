@@ -3,25 +3,89 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-hover-border: #cbd5e1;
+  --accent: #2563eb;
+  --text-muted: #475569;
+  --badge-bg: #eff6ff;
+  --badge-text: #2563eb;
+  --badge-border: #bfdbfe;
+  --nav-bg: rgba(248, 250, 252, 0.8);
+  --hero-glow: rgba(37, 99, 235, 0.05);
+  --terminal-bg: #0f172a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0B0F19;
+  --foreground: #f1f5f9;
+  --card-bg: #111827;
+  --card-border: #1f2937;
+  --card-hover-border: rgba(59, 130, 246, 0.3);
+  --accent: #3b82f6;
+  --text-muted: #94a3b8;
+  --badge-bg: rgba(59, 130, 246, 0.1);
+  --badge-text: #60a5fa;
+  --badge-border: rgba(59, 130, 246, 0.2);
+  --nav-bg: rgba(11, 15, 25, 0.8);
+  --hero-glow: rgba(59, 130, 246, 0.1);
+  --terminal-bg: #090f1e;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inherit;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #ffffff;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+  .stars-bg {
+    background-image: 
+      radial-gradient(rgba(255,255,255,0.4) 1px, transparent 40px),
+      radial-gradient(rgba(255,255,255,0.3) 1px, transparent 30px),
+      radial-gradient(rgba(255,255,255,0.2) 1px, transparent 20px);
+    background-size: 550px 550px, 350px 350px, 250px 250px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+  }
+  .cosmic-glow {
+    background: radial-gradient(circle at top, rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 60%);
+    /* Hologram effect moved to root */
+  }
 }
+
+/* Hologram effect for hero section */
+.hologram-effect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2), transparent 70%);
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  animation: hologramPulse 6s linear infinite;
+}
+
+@keyframes hologramPulse {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+

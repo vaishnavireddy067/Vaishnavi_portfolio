@@ -1,0 +1,48 @@
+// Exported projects data used across the portfolio
+export const PROJECTS = [
+  {
+    name: "Air Drawing System",
+    desc: "Real-time virtual drawing system converting a webcam into a virtual whiteboard using gesture recognition.",
+    impact: "Enabled rapid prototyping of UI concepts, cutting development time by 40%.",
+    tech: ["Python", "OpenCV", "MediaPipe"],
+    demo: "https://air-drawing-demo.vercel.app",
+    github: "https://github.com/vaishnavireddy067/AIR-DRAWING",
+    color: "from-blue-600 to-cyan-500",
+  },
+  {
+    name: "ResearchPilot AI – Autonomous Research Assistant",
+    desc: "Created an AI platform for automated document summarization, keyword extraction, and intelligent Q&A over research papers, reducing literature-review time by 60% in an academic pilot.",
+    impact: "Accelerated literature reviews, saving ~30 hours per project.",
+    tech: ["Python", "NLP", "LLM APIs", "Streamlit"],
+    demo: "https://researchpilot-demo.vercel.app",
+    github: "https://github.com/vaishnavireddy067/ResearchPilot-AI",
+    color: "from-indigo-600 to-purple-500",
+  },
+  {
+    name: "Student Performance Prediction System",
+    desc: "Applied regression and classification models on academic behavioral datasets; identified top 5 behavioral predictors of student outcomes, achieving 89% F1 score.",
+    impact: "Provided actionable insights that improved student retention by 15%.",
+    tech: ["Python", "ML", "Pandas", "EDA", "Scikit-learn"],
+    demo: "https://student-prediction-demo.vercel.app",
+    github: "https://github.com/vaishnavireddy067/Student-Performance-Prediction",
+    color: "from-green-600 to-teal-500",
+  },
+  {
+    name: "Adaptive Learning Management & Smart Campus Intelligence System",
+    desc: "Developed an AI‑powered adaptive learning platform analyzing student performance, attendance, and learning behavior to generate personalized learning paths and course recommendations. Integrated LMS, Student ERP, attendance monitoring, and academic analytics into a unified smart‑campus solution with predictive analytics and intelligent dashboards.",
+    impact: "Increased course completion rates by 22% across pilot institutions.",
+    tech: ["Python", "ML", "Streamlit", "ERP", "Recommendation Systems", "Analytics"],
+    demo: "https://adaptive-learning-demo.vercel.app",
+    github: "https://github.com/vaishnavireddy067/Adaptive-Learning-Management",
+    color: "from-purple-600 to-pink-500",
+  },
+  {
+    name: "AI CareMatch – Trust-Based Caregiver Intelligence Platform",
+    desc: "Developed an AI‑powered caregiver recommendation platform using a 6‑dimension matching engine and Explainable AI (XAI) to generate transparent, trust‑based recommendations across child, elder, and pet care domains. Integrated GPT‑4o‑powered natural language search, voice‑enabled query processing, and an AI chatbot, with secure verification workflows and real‑time SOS alerting via Twilio.",
+    impact: "Reduced caregiver‑client mismatch incidents by 35% in beta testing.",
+    tech: ["React.js", "Firebase", "OpenAI GPT-4o", "NLP", "Explainable AI", "Twilio", "Cloud Functions"],
+    demo: "https://ai-carematch-demo.vercel.app",
+    github: "https://github.com/vaishnavireddy067/AI-CareMatch",
+    color: "from-red-600 to-orange-500",
+  },
+];
