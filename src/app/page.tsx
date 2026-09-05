@@ -1265,28 +1265,36 @@ export default function Home() {
 
                 {/* Form right */}
                 <div className="lg:col-span-7 flex flex-col justify-center">
-                  <form ref={formRef} className="space-y-4 text-left glass-card p-6 md:p-8 rounded-3xl" onSubmit={(e) => {
+                  <form ref={formRef} className="space-y-4 text-left glass-card p-6 md:p-8 rounded-3xl" onSubmit={async (e) => {
                     e.preventDefault();
                     setIsFormSending(true);
                     setFormStatus("idle");
-                    emailjs.sendForm(
-                      "YOUR_SERVICE_ID",
-                      "YOUR_TEMPLATE_ID",
-                      formRef.current!,
-                      "YOUR_PUBLIC_KEY"
-                    ).then(() => {
-                      setFormStatus("success");
-                      formRef.current?.reset();
-                    }).catch(() => {
+                    const formData = new FormData(formRef.current!);
+                    formData.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY!);
+                    try {
+                      const res = await fetch("https://api.web3forms.com/submit", {
+                        method: "POST",
+                        body: formData,
+                      });
+                      const data = await res.json();
+                      if (data.success) {
+                        setFormStatus("success");
+                        formRef.current?.reset();
+                      } else {
+                        setFormStatus("error");
+                      }
+                    } catch {
                       setFormStatus("error");
-                    }).finally(() => setIsFormSending(false));
+                    } finally {
+                      setIsFormSending(false);
+                    }
                   }}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <input type="text" name="from_name" placeholder="Your Name" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
-                      <input type="email" name="from_email" placeholder="Your Email" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
+                      <input type="text" name="name" placeholder="Your Name" className="w-full bg-white/5 dark:bg-white/5 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
+                      <input type="email" name="email" placeholder="Your Email" className="w-full bg-white/5 dark:bg-white/5 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
                     </div>
-                    <input type="text" name="subject" placeholder="Subject" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
-                    <textarea name="message" placeholder="Your Message" rows={4} className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 resize-none text-sm font-body" required></textarea>
+                    <input type="text" name="subject" placeholder="Subject" className="w-full bg-white/5 dark:bg-white/5 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
+                    <textarea name="message" placeholder="Your Message" rows={4} className="w-full bg-white/5 dark:bg-white/5 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 resize-none text-sm font-body" required></textarea>
                     {formStatus === "success" && <p className="text-emerald-500 text-sm font-semibold text-center font-body">✅ Message sent successfully!</p>}
                     {formStatus === "error" && <p className="text-red-500 text-sm font-semibold text-center font-body">❌ Failed to send. Please email directly.</p>}
                     <button type="submit" disabled={isFormSending} className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 text-sm disabled:opacity-60 font-body">
