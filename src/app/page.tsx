@@ -1270,7 +1270,8 @@ export default function Home() {
                     setIsFormSending(true);
                     setFormStatus("idle");
                     const formData = new FormData(formRef.current!);
-                    formData.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY!);
+                    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "17eb505c-ca49-4327-9187-35aeb2f1644b";
+                    formData.append("access_key", accessKey);
                     try {
                       const res = await fetch("https://api.web3forms.com/submit", {
                         method: "POST",
@@ -1281,9 +1282,11 @@ export default function Home() {
                         setFormStatus("success");
                         formRef.current?.reset();
                       } else {
+                        console.error("Web3Forms submission error:", data);
                         setFormStatus("error");
                       }
-                    } catch {
+                    } catch (err) {
+                      console.error("Form submission network error:", err);
                       setFormStatus("error");
                     } finally {
                       setIsFormSending(false);
