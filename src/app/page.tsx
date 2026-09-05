@@ -1272,10 +1272,18 @@ export default function Home() {
                     const formData = new FormData(formRef.current!);
                     const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "17eb505c-ca49-4327-9187-35aeb2f1644b";
                     formData.append("access_key", accessKey);
+                    
+                    const object = Object.fromEntries(formData);
+                    const json = JSON.stringify(object);
+
                     try {
                       const res = await fetch("https://api.web3forms.com/submit", {
                         method: "POST",
-                        body: formData,
+                        headers: {
+                          "Content-Type": "application/json",
+                          Accept: "application/json",
+                        },
+                        body: json,
                       });
                       const data = await res.json();
                       if (data.success) {
