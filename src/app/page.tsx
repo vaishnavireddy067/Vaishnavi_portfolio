@@ -9,11 +9,15 @@ import {
   CheckCircle2, User, MapPin, Sun, Moon, Phone,
   Brain, Network, Eye, Layers, MessageSquare, Mic, Activity,
   AlertTriangle, Workflow, Box, Search, FileText, BarChart, 
-  PieChart, LineChart, Server, Layout, BookOpen, Users, Target, Zap, FileSpreadsheet
+  PieChart, LineChart, Server, Layout, BookOpen, Users, Target, Zap, FileSpreadsheet, ArrowUp, GraduationCap,
+  Maximize2, Trophy, Camera, Calendar, Play, Pause, LayoutGrid, ChevronLeft, ChevronRight, Film
 } from "lucide-react";
 import { SKILL_CATEGORIES } from "../data/skills";
 import { PROJECTS } from "../data/projects";
+import { ACTIVITIES, ActivityItem } from "../data/activities";
 import DownloadDropdown from "../components/DownloadDropdown";
+import emailjs from "@emailjs/browser";
+import TechBackground from "../components/TechBackground";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg className={`${className || ""} pointer-events-none`} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -325,24 +329,103 @@ const EDUCATION = [
   }
 ];
 
-// Reusable Card Component
+const EXPERIENCE = [
+  {
+    role: "AI Backend Engineer Intern",
+    company: "FlyRank",
+    period: "Jul 2026 – Aug 2026 | Remote",
+    location: "Remote",
+    description: "Designed scalable backend APIs integrating AI/ML pipelines (Computer Vision, NLP, Agentic AI, Voice AI) into production-ready applications, collaborating with global cross-functional teams.",
+    tech: ["Python", "Computer Vision", "NLP", "Agentic AI", "Voice AI", "FastAPI"],
+    color: "from-blue-600 to-cyan-500"
+  },
+  {
+    role: "AI Automation & Intelligent Solutions Intern",
+    company: "IBM SkillsBuild (BharatCares)",
+    period: "Jun 2026 – Jul 2026 | Remote",
+    location: "Remote",
+    description: "Completed a 6-week internship on AI automation and intelligent solutions, in association with BharatCares and AICTE. (Certificate ID: BHIBMAC11845)",
+    tech: ["AI Automation", "IBM SkillsBuild", "Intelligent Solutions"],
+    color: "from-indigo-600 to-blue-500"
+  },
+  {
+    role: "AI Engineer Intern",
+    company: "Coding Blocks School of Technology",
+    period: "Jun 2026 – Jul 2026 | Remote",
+    location: "Remote",
+    description: "Trained and evaluated ML models for applied AI tasks, embedding LLM and GenAI APIs into application workflows through structured debugging and implementation.",
+    tech: ["Python", "Machine Learning", "LLM", "GenAI APIs"],
+    color: "from-purple-600 to-indigo-500"
+  },
+  {
+    role: "Artificial Intelligence Intern",
+    company: "Viswam.ai (SoAI)",
+    period: "Jun 2024 – Aug 2024 | Hybrid",
+    location: "Hybrid",
+    description: "Cleaned and validated 5,000+ real-world records using Python (Pandas, NumPy), cutting data-preparation time by approximately 30% through systematic feature engineering.",
+    tech: ["Python", "Pandas", "NumPy", "Feature Engineering"],
+    color: "from-teal-500 to-emerald-400"
+  }
+];
+
+// Reusable Premium Glass Card Component
 const GlowCard = ({ children, className = "", onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => (
   <motion.div 
-    whileHover={{ y: -4, scale: 1.01 }}
-    transition={{ duration: 0.2 }}
+    whileHover={{ y: -5, scale: 1.015 }}
+    transition={{ duration: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
     onClick={onClick}
-    className={`bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:border-[var(--card-hover-border)] transition-all duration-300 ${className}`}
+    className={`glass-card gradient-border shimmer-on-hover rounded-2xl transition-all duration-300 ${onClick ? 'cursor-pointer' : ''} ${className}`}
   >
     {children}
   </motion.div>
 );
 
+const PHOTO_ROTATIONS = [-4, 3, -2, 4, -3, 2, -4, 3, -2, 4];
+
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
+  const [selectedExpIdx, setSelectedExpIdx] = useState(0);
+  const [currentActivityIdx, setCurrentActivityIdx] = useState(0);
+  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
+  const [isActivityHovered, setIsActivityHovered] = useState(false);
+  const [activitySlideDir, setActivitySlideDir] = useState<"left" | "right">("right");
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeSlide, setActiveSlide] = useState("home");
   const [activeSkillCategoryIdx, setActiveSkillCategoryIdx] = useState(0);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+  const [isFormSending, setIsFormSending] = useState(false);
+  const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Autoplay photo reel every ~2.2 seconds (runs continuously, pauses only if user clicks pause button or modal is open)
+  useEffect(() => {
+    if (activeSlide !== "activities" || isAutoplayPaused || selectedActivity !== null) {
+      return;
+    }
+    const timer = setInterval(() => {
+      setActivitySlideDir("right");
+      setCurrentActivityIdx((prev) => (prev + 1) % ACTIVITIES.length);
+    }, 2200);
+
+    return () => clearInterval(timer);
+  }, [activeSlide, isAutoplayPaused, selectedActivity]);
+
+  const handlePrevActivity = () => {
+    setActivitySlideDir("left");
+    setCurrentActivityIdx((prev) => (prev - 1 + ACTIVITIES.length) % ACTIVITIES.length);
+  };
+
+  const handleNextActivity = () => {
+    setActivitySlideDir("right");
+    setCurrentActivityIdx((prev) => (prev + 1) % ACTIVITIES.length);
+  };
+
+  const handleJumpToActivity = (idx: number) => {
+    setActivitySlideDir(idx > currentActivityIdx ? "right" : "left");
+    setCurrentActivityIdx(idx);
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -352,6 +435,16 @@ export default function Home() {
     }
   }, [isDarkMode]);
 
+  useEffect(() => {
+    fetch("https://api.counterapi.dev/v1/vaishnavi-portfolio-2026/visits/hit")
+      .then(res => res.json())
+      .then(data => {
+        const count = data?.count ?? data?.value ?? data?.hits;
+        if (typeof count === 'number') setVisitorCount(count);
+      })
+      .catch(() => {});
+  }, []);
+
   // Handle slide transitions from navigation
   const navigateToSlide = (slide: string) => {
     setActiveSlide(slide);
@@ -359,63 +452,68 @@ export default function Home() {
   };
 
   const getLinkClasses = (slide: string) => {
-    return `text-sm font-semibold transition-all py-1.5 px-3.5 rounded-xl cursor-pointer ${
+    return `text-[13px] font-semibold transition-all py-1.5 px-3.5 rounded-xl cursor-pointer font-body ${
       activeSlide === slide 
-        ? "bg-[var(--accent)] text-white shadow-md shadow-blue-500/20" 
-        : "text-[var(--text-muted)] hover:text-[var(--foreground)]"
+        ? "nav-active-pill active" 
+        : "text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)]"
     }`;
   };
 
   const getMobileLinkClasses = (slide: string) => {
-    return `text-lg font-bold transition-all py-2.5 px-4 rounded-xl cursor-pointer ${
+    return `text-base font-semibold transition-all py-2.5 px-4 rounded-xl cursor-pointer font-body ${
       activeSlide === slide 
-        ? "bg-[var(--accent)] text-white" 
-        : "text-[var(--text-muted)] hover:text-[var(--foreground)]"
+        ? "nav-active-pill active" 
+        : "text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)]"
     }`;
   };
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans selection:bg-blue-500/30 overflow-x-hidden transition-colors duration-300 relative stars-bg">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-body selection:bg-indigo-500/30 overflow-x-hidden transition-colors duration-300 relative stars-bg">
       {/* Background Cosmic Top Center Light */}
       <div className="absolute top-0 left-0 w-full h-[600px] cosmic-glow pointer-events-none z-0" />
 
+      {/* Animated Tech Pattern Background */}
+      <TechBackground isDark={isDarkMode} />
+
       {/* Navigation Header */}
-      <nav className="fixed top-0 w-full z-50 bg-[var(--nav-bg)] backdrop-blur-xl border-b border-[var(--card-border)] transition-colors duration-300">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="fixed top-0 w-full z-50 bg-[var(--nav-bg)] backdrop-blur-2xl border-b border-[var(--card-border)]/60 transition-colors duration-300 shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
            {/* Logo Branding */}
-           <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigateToSlide("home")}>
-             <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center text-white font-extrabold shadow-md shadow-blue-500/20">A</div>
-             <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">Anugu Vaishnavi</span>
+           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigateToSlide("home")}>
+             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-extrabold shadow-lg shadow-indigo-500/25 text-sm font-heading">AV</div>
+             <span className="text-lg font-bold tracking-tight text-[var(--foreground)] font-heading hidden sm:block">Anugu Vaishnavi</span>
            </div>
            
            {/* Navigation Centered Slide Links */}
-           <div className="hidden md:flex gap-1.5 p-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-inner">
+           <div className="hidden md:flex gap-0.5 p-1.5 glass-card rounded-2xl">
              <button onClick={() => navigateToSlide("home")} className={getLinkClasses("home")}>Home</button>
              <button onClick={() => navigateToSlide("about")} className={getLinkClasses("about")}>About</button>
              <button onClick={() => navigateToSlide("skills")} className={getLinkClasses("skills")}>Skills</button>
-
+             <button onClick={() => navigateToSlide("education")} className={getLinkClasses("education")}>Education</button>
+             <button onClick={() => navigateToSlide("experience")} className={getLinkClasses("experience")}>Experience</button>
              <button onClick={() => navigateToSlide("projects")} className={getLinkClasses("projects")}>Projects</button>
-             <button onClick={() => navigateToSlide("certifications")} className={getLinkClasses("certifications")}>Certifications</button>
+             <button onClick={() => navigateToSlide("activities")} className={getLinkClasses("activities")}>Activities</button>
+             <button onClick={() => navigateToSlide("certifications")} className={getLinkClasses("certifications")}>Certs</button>
              <button onClick={() => navigateToSlide("contact")} className={getLinkClasses("contact")}>Contact</button>
            </div>
            
            {/* Socials & Theme Toggle right */}
-           <div className="flex items-center gap-3">
-             <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block p-2 text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">
-               <GithubIcon className="w-5 h-5" />
+           <div className="flex items-center gap-2">
+             <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
+               <GithubIcon className="w-4.5 h-4.5" />
              </a>
-             <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block p-2 text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">
-               <LinkedinIcon className="w-5 h-5" />
+             <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
+               <LinkedinIcon className="w-4.5 h-4.5" />
              </a>
              <button 
                onClick={() => setIsDarkMode(!isDarkMode)}
-               className="p-2.5 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] transition-all"
+               className="p-2.5 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] transition-all shadow-sm"
                aria-label="Toggle Theme"
              >
-               {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-600" />}
+               {isDarkMode ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-indigo-500" />}
              </button>
              <button className="md:hidden p-2 text-[var(--text-muted)] hover:text-[var(--foreground)] focus:outline-none" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-               <Menu className="w-6 h-6" />
+               <Menu className="w-5 h-5" />
              </button>
            </div>
         </div>
@@ -434,7 +532,9 @@ export default function Home() {
              <button onClick={() => navigateToSlide("about")} className={getMobileLinkClasses("about")}>About</button>
              <button onClick={() => navigateToSlide("skills")} className={getMobileLinkClasses("skills")}>Skills</button>
              <button onClick={() => navigateToSlide("education")} className={getMobileLinkClasses("education")}>Education</button>
+             <button onClick={() => navigateToSlide("experience")} className={getMobileLinkClasses("experience")}>Experience</button>
              <button onClick={() => navigateToSlide("projects")} className={getMobileLinkClasses("projects")}>Projects</button>
+             <button onClick={() => navigateToSlide("activities")} className={getMobileLinkClasses("activities")}>Activities &amp; Moments</button>
              <button onClick={() => navigateToSlide("certifications")} className={getMobileLinkClasses("certifications")}>Certifications</button>
              <button onClick={() => navigateToSlide("contact")} className={getMobileLinkClasses("contact")}>Contact</button>
              <div className="flex items-center gap-4 pt-4 border-t border-[var(--card-border)]/50 justify-center">
@@ -444,7 +544,7 @@ export default function Home() {
                 <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--card-border)] bg-[var(--background)] text-[var(--text-muted)] hover:text-[var(--foreground)] rounded-full transition-all">
                   <LinkedinIcon className="w-5 h-5 pointer-events-none" />
                 </a>
-                <a href="mailto:anuguvaishnavireddy6@gmail.com" className="p-3 border border-[var(--card-border)] bg-[var(--background)] text-[var(--text-muted)] hover:text-[var(--foreground)] rounded-full transition-all">
+                <a href="mailto:anuguvaishnavireddy2@gmail.com" className="p-3 border border-[var(--card-border)] bg-[var(--background)] text-[var(--text-muted)] hover:text-[var(--foreground)] rounded-full transition-all">
                   <Mail className="w-5 h-5" />
                 </a>
               </div>
@@ -467,40 +567,47 @@ export default function Home() {
             {activeSlide === "home" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
                 {/* Left block info */}
-                <div className="lg:col-span-7 text-left space-y-6">
-                  <div className="space-y-3">
-                    <h3 className="text-xl md:text-2xl font-semibold text-[var(--foreground)]">Hi there,</h3>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none text-[var(--foreground)]">
-                      I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-400 dark:to-violet-400">Anugu Vaishnavi</span>
+                <div className="lg:col-span-7 text-left space-y-7">
+                  <div className="space-y-4">
+                    <div className="section-eyebrow">Hello World</div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.08] text-[var(--foreground)] font-heading">
+                      I&apos;m{" "}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500">
+                        Anugu Vaishnavi
+                      </span>
                     </h1>
-                    <h2 className="text-xl md:text-2xl font-extrabold text-[var(--foreground)] flex items-center gap-2">
-                      And I&apos;m an <span className="text-[var(--accent)]">AI & ML Enthusiast |</span>
-                    </h2>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-lg md:text-xl font-semibold text-[var(--text-muted)] font-body">AI &amp; ML Enthusiast</span>
+                      <span className="text-[var(--card-border)] font-light text-lg">·</span>
+                      <span className="text-lg md:text-xl font-semibold text-[var(--text-muted)] font-body">Full Stack Developer</span>
+                      <span className="text-[var(--card-border)] font-light text-lg">·</span>
+                      <span className="text-lg md:text-xl font-semibold text-[var(--text-muted)] font-body">Data Analyst</span>
+                    </div>
                   </div>
                   
-                  <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed max-w-xl">
-                    I build modern, responsive and scalable intelligent systems using Generative AI and LLM technologies. Aspiring Software Developer & Data Analyst.
+                  <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed max-w-lg font-body">
+                    Building scalable, intelligent systems powered by Generative AI and LLM technologies. Turning complex data into elegant, impactful solutions.
                   </p>
                   
-                  <div className="flex flex-wrap items-center gap-2.5 pt-2">
-                    <button onClick={() => navigateToSlide("about")} className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs md:text-sm font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <button onClick={() => navigateToSlide("about")} className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-sm font-semibold rounded-xl transition-all shadow-[0_4px_20px_rgba(99,102,241,0.35)] hover:shadow-[0_6px_28px_rgba(99,102,241,0.45)] hover:-translate-y-0.5 font-body">
                       About Me
                     </button>
                     <DownloadDropdown />
-                    <button onClick={() => navigateToSlide("contact")} className="px-5 py-2.5 bg-transparent text-[var(--foreground)] text-xs md:text-sm font-semibold border border-[var(--card-border)] rounded-xl hover:bg-[var(--card-bg)] hover:border-[var(--card-hover-border)] transition-all">
+                    <button onClick={() => navigateToSlide("contact")} className="px-6 py-3 bg-transparent text-[var(--foreground)] text-sm font-semibold border border-[var(--card-border)] rounded-xl hover:bg-[var(--badge-bg)] hover:border-[var(--card-hover-border)] transition-all font-body">
                       Contact Me
                     </button>
                   </div>
 
                   {/* Social Circles Row */}
-                  <div className="flex items-center gap-4 pt-4">
-                    <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)] rounded-full transition-all">
+                  <div className="flex items-center gap-3 pt-2">
+                    <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="p-3 glass-card rounded-xl text-[var(--text-muted)] hover:text-[var(--foreground)] transition-all">
                       <GithubIcon className="w-5 h-5" />
                     </a>
-                    <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)] rounded-full transition-all">
+                    <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="p-3 glass-card rounded-xl text-[var(--text-muted)] hover:text-[var(--foreground)] transition-all">
                       <LinkedinIcon className="w-5 h-5" />
                     </a>
-                    <a href="mailto:anuguvaishnavireddy6@gmail.com" className="p-3 border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)] rounded-full transition-all">
+                    <a href="mailto:anuguvaishnavireddy2@gmail.com" className="p-3 glass-card rounded-xl text-[var(--text-muted)] hover:text-[var(--foreground)] transition-all">
                       <Mail className="w-5 h-5" />
                     </a>
                   </div>
@@ -508,27 +615,29 @@ export default function Home() {
 
                 {/* Right avatar visual */}
                 <div className="lg:col-span-5 flex flex-col items-center gap-4 relative">
-                  <img src="/images/profile.png" alt="Anugu Vaishnavi" className="w-[260px] h-[260px] md:w-[320px] md:h-[320px] rounded-full object-cover border-4 border-blue-500/80 shadow-[0_0_40px_rgba(59,130,246,0.3)] transition-transform hover:scale-105 relative z-10" />
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/30 via-violet-500/20 to-transparent blur-2xl scale-110" />
+                    <img src="/images/profile.png" alt="Anugu Vaishnavi" className="w-[260px] h-[260px] md:w-[320px] md:h-[320px] rounded-full object-cover ring-4 ring-indigo-500/40 shadow-[0_0_60px_rgba(99,102,241,0.25)] transition-transform hover:scale-105 relative z-10" />
+                  </div>
                 </div>
 
                 {/* Bottom stats layout */}
-                <div className="lg:col-span-12 mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-[var(--card-border)]">
-                  <div className="text-center p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm">
-                    <div className="text-3xl font-extrabold text-[var(--accent)]">5+</div>
-                    <div className="text-xs text-[var(--text-muted)] font-semibold mt-1">Projects Completed</div>
-                  </div>
-                  <div className="text-center p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm">
-                    <div className="text-3xl font-extrabold text-[var(--accent)]">10+</div>
-                    <div className="text-xs text-[var(--text-muted)] font-semibold mt-1">Certificates</div>
-                  </div>
-                  <div className="text-center p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm">
-                    <div className="text-3xl font-extrabold text-[var(--accent)]">12+</div>
-                    <div className="text-xs text-[var(--text-muted)] font-semibold mt-1">Technologies</div>
-                  </div>
-                  <div className="text-center p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm">
-                    <div className="text-3xl font-extrabold text-[var(--accent)]">100%</div>
-                    <div className="text-xs text-[var(--text-muted)] font-semibold mt-1">Dedication</div>
-                  </div>
+                <div className="lg:col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-[var(--card-border)]/60">
+                  {[
+                    { value: "5+", label: "Projects Completed" },
+                    { value: "10+", label: "Certificates" },
+                    { value: "4", label: "Internships" },
+                    { value: "100%", label: "Dedication" },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ y: -3 }}
+                      className="text-center p-5 glass-card rounded-2xl"
+                    >
+                      <div className="text-3xl font-extrabold bg-gradient-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent font-heading">{stat.value}</div>
+                      <div className="text-xs text-[var(--text-muted)] font-medium mt-1.5 font-body">{stat.label}</div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             )}
@@ -536,65 +645,42 @@ export default function Home() {
             {/* Slide: About Me */}
             {activeSlide === "about" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch w-full">
-                <div className="lg:col-span-7 flex flex-col justify-center space-y-6">
+                <div className="lg:col-span-7 flex flex-col justify-center space-y-7">
                   <div>
-                    <span className="text-xs font-bold tracking-widest text-[var(--accent)] uppercase">About Me</span>
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] mt-2">About Me</h2>
+                    <div className="section-eyebrow mb-3">About Me</div>
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading leading-tight">Passionate Builder,<br />Curious Thinker.</h2>
                   </div>
                   
-                  <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed">
-                    I am a passionate <strong className="text-[var(--foreground)]">AI & ML Builder and Full Stack Developer</strong> driven by the desire to innovate and engineer scalable solutions. As an aspiring <strong className="text-[var(--foreground)]">Data Analyst & Software Developer</strong>, my core goal is to build highly functional, intelligent systems that solve real-world challenges by blending robust AI algorithms with intuitive user interfaces. Furthermore, as an active <strong className="text-[var(--foreground)]">Public Speaker & Content Creator</strong>, I love sharing my journey, discussing tech trends, and building in public.
+                  <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed font-body">
+                    I am a passionate <strong className="text-[var(--foreground)] font-semibold">AI & ML Builder and Full Stack Developer</strong> driven by the desire to innovate and engineer scalable solutions. As an aspiring <strong className="text-[var(--foreground)] font-semibold">Data Analyst & Software Developer</strong>, my core goal is to build highly functional, intelligent systems that solve real-world challenges by blending robust AI algorithms with intuitive user interfaces. Furthermore, as an active <strong className="text-[var(--foreground)] font-semibold">Public Speaker & Content Creator</strong>, I love sharing my journey, discussing tech trends, and building in public.
                   </p>
-                  
-                  <div className="flex justify-center gap-2.5 pt-6">
+
+                  {/* Highlight Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {["AI & ML Builder", "Full Stack Dev", "Data Analyst", "Public Speaker", "Open Source"].map(tag => (
+                      <span key={tag} className="skill-badge">{tag}</span>
+                    ))}
                   </div>
                 </div>
 
                 <div className="lg:col-span-5 flex flex-col justify-center">
-                  <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 space-y-6 shadow-sm transition-all duration-300">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl transition-all duration-300">
-                        <User className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-[var(--text-muted)] font-medium">Name</div>
-                        <div className="font-semibold text-[var(--foreground)]">Anugu Vaishnavi</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl transition-all duration-300">
-                        <Mail className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-[var(--text-muted)] font-medium">Email</div>
-                        <div className="font-semibold text-[var(--foreground)]">anuguvaishnavireddy6@gmail.com</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl transition-all duration-300">
-                        <MapPin className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-[var(--text-muted)] font-medium">Location</div>
-                        <div className="font-semibold text-[var(--foreground)]">Hyderabad, India</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl transition-all duration-300">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-[var(--text-muted)] font-medium">Availability</div>
-                        <div className="font-semibold text-[var(--foreground)] flex items-center gap-2">
-                          Available for work
-                          <span className="w-2 h-2 bg-emerald-500 rounded-full inline-block animate-ping"></span>
+                  <GlowCard className="p-7 space-y-5">
+                    {[
+                      { icon: <User className="w-4.5 h-4.5" />, label: "Name", value: "Anugu Vaishnavi" },
+                      { icon: <Mail className="w-4.5 h-4.5" />, label: "Email", value: "anuguvaishnavireddy2@gmail.com", small: true },
+                      { icon: <MapPin className="w-4.5 h-4.5" />, label: "Location", value: "Hyderabad, India" },
+                    ].map(({ icon, label, value, small }) => (
+                      <div key={label} className="flex items-center gap-4">
+                        <div className="p-2.5 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 text-[var(--accent)] rounded-xl border border-[var(--badge-border)] flex-shrink-0">
+                          {icon}
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-[var(--text-muted)] font-semibold uppercase tracking-wider font-code">{label}</div>
+                          <div className={`font-semibold text-[var(--foreground)] font-body ${small ? 'text-sm' : ''}`}>{value}</div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    ))}
+                  </GlowCard>
                 </div>
               </div>
             )}
@@ -603,20 +689,20 @@ export default function Home() {
             {activeSlide === "skills" && (
               <div className="w-full space-y-8">
                 <div className="text-center">
-                  <span className="text-xs font-bold tracking-widest text-[var(--accent)] uppercase">My Skills</span>
-                  <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] mt-2">Technical & Soft Skills</h2>
+                  <div className="section-eyebrow justify-center mb-3">My Skills</div>
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Technical &amp; Soft Skills</h2>
                 </div>
 
-                {/* Categories Tab pills */}
-                <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto p-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl">
+                {/* Category pills */}
+                <div className="flex flex-wrap justify-center gap-1.5 max-w-4xl mx-auto p-1.5 glass-card rounded-2xl">
                   {SKILL_CATEGORIES.map((cat, idx) => (
                     <button
                       key={idx}
                       onClick={() => setActiveSkillCategoryIdx(idx)}
-                      className={`text-xs md:text-sm font-semibold transition-all py-1.5 px-3 md:px-4 rounded-xl cursor-pointer ${
+                      className={`text-xs font-semibold transition-all py-1.5 px-3.5 rounded-xl cursor-pointer font-body ${
                         activeSkillCategoryIdx === idx 
-                          ? "bg-[var(--accent)] text-white shadow-md shadow-blue-500/10" 
-                          : "text-[var(--text-muted)] hover:text-[var(--foreground)]"
+                          ? "nav-active-pill active" 
+                          : "text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)]"
                       }`}
                     >
                       {cat.title}
@@ -624,24 +710,17 @@ export default function Home() {
                   ))}
                 </div>
 
-                {/* Grid of skill tags in identical cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-h-[50vh] overflow-y-auto pr-2">
+                {/* Skill Cards Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto pr-1">
                   {SKILL_CATEGORIES[activeSkillCategoryIdx].skills.map((skillName, idx) => (
-                    <GlowCard key={idx} className="flex flex-col items-center text-center p-6">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 ${(() => {
-                        const lower = skillName.toLowerCase();
-                        if (lower.includes('python')) return 'bg-blue-100 text-blue-800';
-                        if (lower.includes('react')) return 'bg-green-100 text-green-800';
-                        if (lower.includes('javascript')) return 'bg-yellow-100 text-yellow-800';
-                        if (lower.includes('typescript')) return 'bg-indigo-100 text-indigo-800';
-                        if (lower.includes('tailwind')) return 'bg-teal-100 text-teal-800';
-                        return 'bg-[var(--background)]';
-                      })()}`}
-                      >
+                    <GlowCard key={idx} className="flex flex-col items-center text-center p-5 gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-[var(--badge-border)] flex items-center justify-center">
                         {getSkillIcon(skillName)}
                       </div>
-                      <h4 className="font-bold text-[var(--foreground)] text-sm md:text-base mb-1">{skillName}</h4>
-                      <span className="text-xs text-[var(--text-muted)] font-medium">{SKILL_CATEGORIES[activeSkillCategoryIdx].title}</span>
+                      <div>
+                        <h4 className="font-bold text-[var(--foreground)] text-sm leading-tight font-heading">{skillName}</h4>
+                        <span className="text-[10px] text-[var(--text-muted)] font-medium font-code mt-0.5 block">{SKILL_CATEGORIES[activeSkillCategoryIdx].title}</span>
+                      </div>
                     </GlowCard>
                   ))}
                 </div>
@@ -652,100 +731,33 @@ export default function Home() {
         {activeSlide === "projects" && (
           <div className="w-full space-y-8">
             <div className="text-center">
-              <span className="text-xs font-bold tracking-widest text-[var(--accent)] uppercase">Projects</span>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] mt-2">Featured Projects</h2>
+              <div className="section-eyebrow justify-center mb-3">Projects</div>
+              <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Featured Projects</h2>
             </div>
-            {/* Enhanced Projects Grid with rich UI */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {PROJECTS.map((proj, idx) => (
                 <GlowCard
                   key={idx}
-                  className="p-6 flex flex-col h-full justify-between cursor-pointer hover:shadow-lg"
+                  className="flex flex-col h-full overflow-hidden"
                   onClick={() => setSelectedProject(proj)}
                   aria-label={`Open ${proj.name} details`}
                 >
-                  {/* Project Image */}
+                  {/* Gradient header band */}
+                  <div className={`h-2 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
                   {proj.image && (
-                    <img
-                      src={proj.image}
-                      alt={`${proj.name} screenshot`}
-                      className="w-full h-40 object-cover rounded mb-3"
-                    />
+                    <img src={proj.image} alt={`${proj.name} screenshot`} className="w-full h-36 object-cover" />
                   )}
-                  <div className="space-y-2 flex-1">
-                    <h3 className="text-xl font-bold text-[var(--foreground)]">{proj.name}</h3>
-                    <p className="text-sm text-[var(--text-muted)] line-clamp-2">{proj.desc}</p>
-                    {/* Impact statement */}
-                    {proj.impact && (
-                      <p className="text-xs text-[var(--accent)] mt-1">{proj.impact}</p>
-                    )}
-                    {/* Helper to assign Tailwind background colors for tech badges */}
-                    {/* Updated tech badge block with Read More and buttons */}
-{(() => {
-  const getTechBadgeClass = (tech: string) => {
-    const lower = tech.toLowerCase();
-    if (lower.includes('python')) return 'bg-blue-100 text-blue-800';
-    if (lower.includes('react')) return 'bg-green-100 text-green-800';
-    if (lower.includes('javascript')) return 'bg-yellow-100 text-yellow-800';
-    if (lower.includes('typescript')) return 'bg-indigo-100 text-indigo-800';
-    if (lower.includes('next.js') || lower.includes('nextjs')) return 'bg-gray-100 text-gray-800';
-    if (lower.includes('tailwind')) return 'bg-teal-100 text-teal-800';
-    return 'bg-[var(--badge-bg)] text-[var(--badge-text)]';
-  };
-  return (
-    <>
-      <div className="flex flex-wrap gap-2 mt-2">
-        {proj.tech.map((t) => (
-          <span
-            key={t}
-            className={`text-xs px-2 py-1 border border-[var(--badge-border)] rounded ${getTechBadgeClass(t)}`}
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-      {/* Read More link */}
-      {proj.blog && (
-        <a
-          href={proj.blog}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${proj.name} blog`}
-          className="mt-2 inline-block text-sm text-[var(--accent)] hover:underline"
-        >
-          Read More
-        </a>
-      )}
-      {/* Demo & Source buttons */}
-      <div className="mt-2 flex gap-2">
-        {proj.demo && (
-          <a
-            href={proj.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open ${proj.name} demo`}
-            data-analytics="demo"
-            className="px-3 py-1 bg-[var(--accent)] text-white rounded text-sm hover:brightness-90"
-          >
-            Live Demo
-          </a>
-        )}
-        {proj.github && (
-          <a
-            href={proj.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open ${proj.name} source`}
-            data-analytics="source"
-            className="px-3 py-1 bg-gray-200 text-[var(--foreground)] rounded text-sm hover:bg-gray-300"
-          >
-            View Source
-          </a>
-        )}
-      </div>
-    </>
-  );
-})()}
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-lg font-bold text-[var(--foreground)] font-heading mb-1">{proj.name}</h3>
+                    <p className="text-sm text-[var(--text-muted)] line-clamp-2 font-body leading-relaxed flex-1">{proj.desc}</p>
+                    {proj.impact && <p className="text-xs text-[var(--accent)] mt-2 font-medium font-body">{proj.impact}</p>}
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {proj.tech.slice(0, 3).map((t: string) => (
+                        <span key={t} className="skill-badge">{t}</span>
+                      ))}
+                      {proj.tech.length > 3 && <span className="skill-badge">+{proj.tech.length - 3}</span>}
+                    </div>
+
                   </div>
                 </GlowCard>
               ))}
@@ -754,27 +766,466 @@ export default function Home() {
         )}
 
 
+
+            {/* Slide: Education */}
+            {activeSlide === "education" && (
+              <div className="w-full space-y-8">
+                <div className="text-center">
+                  <div className="section-eyebrow justify-center mb-3">My Journey</div>
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Education</h2>
+                </div>
+                <div className="flex flex-col gap-4 max-w-3xl mx-auto">
+                  {EDUCATION.map((edu, idx) => (
+                    <GlowCard key={idx} className="p-6 flex gap-5 items-start overflow-hidden">
+                      <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 to-violet-500 rounded-l-2xl`} style={{position: 'absolute'}} />
+                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <GraduationCap className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-base font-bold text-[var(--foreground)] font-heading">{edu.institution}</h3>
+                        <p className="text-sm font-semibold text-[var(--accent)] mt-0.5 font-body">{edu.degree}</p>
+                        <div className="flex flex-wrap gap-3 mt-2">
+                          <span className="text-xs text-[var(--text-muted)] font-code">{edu.period}</span>
+                          <span className="text-xs text-[var(--text-muted)] flex items-center gap-1 font-body"><MapPin className="w-3 h-3" />{edu.location}</span>
+                        </div>
+                        {edu.details && <div className="mt-2 text-xs font-bold text-emerald-500 font-code">{edu.details}</div>}
+                      </div>
+                    </GlowCard>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Slide: Experience (Interactive Split Career Pathway & Dossier) */}
+            {activeSlide === "experience" && (() => {
+              const currentExp = EXPERIENCE[selectedExpIdx] || EXPERIENCE[0];
+
+              return (
+                <div className="w-full space-y-7 max-w-5xl mx-auto">
+                  <div className="text-center space-y-2">
+                    <div className="section-eyebrow justify-center mb-1">Career Journey</div>
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">
+                      Professional Experience
+                    </h2>
+                    <p className="text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto font-body">
+                      Key engineering roles, AI research internships, and industry collaborations.
+                    </p>
+                  </div>
+
+                  {/* Split Interactive Experience Explorer */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pt-2">
+                    {/* Left Column: Vertical Timeline Company Tabs */}
+                    <div className="lg:col-span-5 flex flex-col gap-3 relative">
+                      {/* Connected Vertical Timeline Line */}
+                      <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-gradient-to-b from-indigo-500/40 via-purple-500/30 to-transparent hidden sm:block pointer-events-none" />
+
+                      {EXPERIENCE.map((exp, idx) => {
+                        const isSelected = idx === selectedExpIdx;
+                        return (
+                          <div
+                            key={idx}
+                            onClick={() => setSelectedExpIdx(idx)}
+                            className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 relative text-left flex items-start gap-4 ${
+                              isSelected
+                                ? "glass-card gradient-border border-[var(--accent)] shadow-xl shadow-indigo-500/10 scale-[1.02]"
+                                : "bg-[var(--card-bg)]/60 border border-[var(--card-border)] hover:border-[var(--card-hover-border)] hover:bg-[var(--card-bg)] opacity-85 hover:opacity-100"
+                            }`}
+                          >
+                            {/* Glowing Timeline Indicator Node */}
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs font-code flex-shrink-0 transition-all z-10 ${
+                              isSelected
+                                ? `bg-gradient-to-br ${exp.color} text-white shadow-md shadow-indigo-500/30 scale-110`
+                                : "bg-[var(--badge-bg)] text-[var(--text-muted)] border border-[var(--card-border)]"
+                            }`}>
+                              0{idx + 1}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <h4 className={`text-sm font-bold font-heading truncate transition-colors ${isSelected ? "text-[var(--foreground)]" : "text-[var(--text-muted)]"}`}>
+                                {exp.company}
+                              </h4>
+                              <p className="text-xs font-semibold text-[var(--accent)] truncate mt-0.5 font-body">
+                                {exp.role}
+                              </p>
+                              <span className="text-[11px] text-[var(--text-muted)] font-code mt-1 block opacity-80">
+                                {exp.period.split("|")[0]}
+                              </span>
+                            </div>
+
+                            {isSelected && (
+                              <div className="self-center text-[var(--accent)] hidden sm:block">
+                                <ChevronRight className="w-4 h-4" />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Right Column: Detailed Career Dossier Stage */}
+                    <div className="lg:col-span-7 flex">
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={currentExp.company}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ duration: 0.35, ease: "easeOut" }}
+                          className="glass-card gradient-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between w-full text-left space-y-6 relative overflow-hidden"
+                        >
+                          {/* Top Accent Gradient Bar */}
+                          <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${currentExp.color}`} />
+
+                          <div className="space-y-4">
+                            {/* Header: Company & Role */}
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between flex-wrap gap-2">
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full text-white bg-gradient-to-r ${currentExp.color} shadow-sm`}>
+                                  {currentExp.role}
+                                </span>
+                                <span className="text-xs text-[var(--text-muted)] font-code flex items-center gap-1">
+                                  <MapPin className="w-3 h-3 text-[var(--accent)]" /> {currentExp.location}
+                                </span>
+                              </div>
+
+                              <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] font-heading pt-1">
+                                {currentExp.company}
+                              </h3>
+
+                              <div className="text-xs font-code font-semibold text-[var(--accent)]">
+                                📅 {currentExp.period}
+                              </div>
+                            </div>
+
+                            {/* Description & Impact Details */}
+                            <div className="space-y-3 pt-2 border-t border-[var(--card-border)]/50">
+                              <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] font-code">
+                                Key Focus &amp; Contributions:
+                              </h4>
+                              <p className="text-sm text-[var(--text-muted)] leading-relaxed font-body">
+                                {currentExp.description}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Tech Stack Chips */}
+                          <div className="space-y-2 pt-4 border-t border-[var(--card-border)]/50">
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] font-code">
+                              Technologies &amp; Core Tools:
+                            </h4>
+                            <div className="flex flex-wrap gap-1.5">
+                              {currentExp.tech.map((t) => (
+                                <span key={t} className="skill-badge text-xs px-3 py-1">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Slide: Activities & Moments (Interactive Photo Reel Showcase) */}
+            {activeSlide === "activities" && (() => {
+              const currentActivity = ACTIVITIES[currentActivityIdx] || ACTIVITIES[0];
+              const rotationAngle = PHOTO_ROTATIONS[currentActivityIdx] || 0;
+              const formattedCounter = `${String(currentActivityIdx + 1).padStart(2, "0")} / ${String(ACTIVITIES.length).padStart(2, "0")}`;
+
+              return (
+                <div className="w-full max-w-4xl mx-auto space-y-6 sm:space-y-7">
+                  {/* Section Header */}
+                  <div className="text-center space-y-1.5">
+                    <div className="section-eyebrow justify-center">Activities</div>
+                    <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--foreground)] font-heading tracking-tight">
+                      &ldquo;Moments that shaped my journey&rdquo;
+                    </h2>
+                  </div>
+
+                  {/* Central Photo Showcase Stage */}
+                  <div className="relative flex flex-col items-center justify-center pt-2 pb-1">
+                    {/* Background Ambient Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
+
+                    <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
+                      {/* Left/Center: 3D Stacked Polaroid Photo Deck */}
+                      <div className="md:col-span-6 flex justify-center py-4 relative min-h-[300px] sm:min-h-[360px] items-center">
+                        <div className="relative w-full max-w-sm sm:max-w-md h-[260px] sm:h-[310px] flex items-center justify-center">
+                          {/* Layer 2: Card deep in the background */}
+                          {(() => {
+                            const nextNextIdx = (currentActivityIdx + 2) % ACTIVITIES.length;
+                            const nextNextAct = ACTIVITIES[nextNextIdx];
+                            const nextNextRot = PHOTO_ROTATIONS[nextNextIdx] || 0;
+                            return (
+                              <motion.div
+                                key={`stack-bg2-${nextNextAct.id}`}
+                                animate={{
+                                  scale: 0.88,
+                                  y: 18,
+                                  rotate: nextNextRot,
+                                  opacity: 0.35,
+                                }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
+                                className="absolute inset-0 p-3 sm:p-4 rounded-3xl bg-[var(--card-bg)] border border-[var(--card-border)]/40 shadow-xl pointer-events-none z-10 filter brightness-75"
+                              >
+                                <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-black/70">
+                                  <img
+                                    src={nextNextAct.image}
+                                    alt=""
+                                    className="w-full h-full object-cover opacity-60"
+                                  />
+                                </div>
+                              </motion.div>
+                            );
+                          })()}
+
+                          {/* Layer 1: Card immediately behind top card */}
+                          {(() => {
+                            const nextIdx = (currentActivityIdx + 1) % ACTIVITIES.length;
+                            const nextAct = ACTIVITIES[nextIdx];
+                            const nextRot = PHOTO_ROTATIONS[nextIdx] || 0;
+                            return (
+                              <motion.div
+                                key={`stack-bg1-${nextAct.id}`}
+                                animate={{
+                                  scale: 0.94,
+                                  y: 9,
+                                  rotate: nextRot,
+                                  opacity: 0.7,
+                                }}
+                                transition={{ duration: 0.45, ease: "easeOut" }}
+                                className="absolute inset-0 p-3 sm:p-4 rounded-3xl bg-[var(--card-bg)] border border-[var(--card-border)]/70 shadow-2xl pointer-events-none z-20 filter brightness-90"
+                              >
+                                <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-black/60">
+                                  <img
+                                    src={nextAct.image}
+                                    alt=""
+                                    className="w-full h-full object-cover opacity-80"
+                                  />
+                                </div>
+                              </motion.div>
+                            );
+                          })()}
+
+                          {/* Layer 0: Front Interactive Active Card (Flies to the back when advancing) */}
+                          <AnimatePresence mode="wait" custom={activitySlideDir}>
+                            <motion.div
+                              key={currentActivity.id}
+                              custom={activitySlideDir}
+                              initial={{
+                                opacity: 0,
+                                x: activitySlideDir === "right" ? -60 : 60,
+                                y: 15,
+                                scale: 0.92,
+                                rotate: rotationAngle + (activitySlideDir === "right" ? -5 : 5),
+                              }}
+                              animate={{
+                                opacity: 1,
+                                x: 0,
+                                y: 0,
+                                scale: 1,
+                                rotate: rotationAngle,
+                              }}
+                              exit={{
+                                opacity: 0,
+                                x: activitySlideDir === "right" ? 130 : -130,
+                                y: -25,
+                                scale: 0.88,
+                                rotate: rotationAngle + (activitySlideDir === "right" ? 14 : -14),
+                              }}
+                              transition={{
+                                duration: 0.48,
+                                ease: [0.34, 1.4, 0.64, 1],
+                              }}
+                              drag="x"
+                              dragConstraints={{ left: 0, right: 0 }}
+                              dragElastic={0.3}
+                              onDragEnd={(_, info) => {
+                                if (info.offset.x < -40) handleNextActivity();
+                                else if (info.offset.x > 40) handlePrevActivity();
+                              }}
+                              whileHover={{
+                                scale: 1.03,
+                                rotate: 0,
+                                y: -4,
+                                transition: { duration: 0.22, ease: "easeOut" }
+                              }}
+                              onClick={() => setSelectedActivity(currentActivity)}
+                              className="absolute inset-0 cursor-pointer p-3 sm:p-4 rounded-3xl bg-[var(--card-bg)] border border-[var(--card-border)] shadow-[0_22px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl group z-30 transition-shadow duration-300 hover:shadow-[0_25px_70px_rgba(99,102,241,0.3)] hover:border-[var(--card-hover-border)]"
+                            >
+                              {/* Photo Aspect Ratio Frame */}
+                              <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-black/60 shadow-inner">
+                                <img
+                                  src={currentActivity.image}
+                                  alt={currentActivity.title}
+                                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20" />
+
+                                {/* Floating Badge on Photo */}
+                                <div className="absolute top-3 right-3 z-10">
+                                  <span className={`text-[11px] font-bold px-3 py-1 rounded-full shadow-lg bg-gradient-to-r ${currentActivity.badgeColor}`}>
+                                    {currentActivity.badge}
+                                  </span>
+                                </div>
+
+                                {/* Click to expand overlay pill */}
+                                <div className="absolute bottom-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/75 backdrop-blur-md text-white text-xs px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg scale-95 group-hover:scale-100 font-body">
+                                  <Maximize2 className="w-3.5 h-3.5 text-indigo-400" />
+                                  <span>View Details</span>
+                                </div>
+                              </div>
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
+                      </div>
+
+                      {/* Right/Beside: Activity Editorial Content & Controls */}
+                      <div className="md:col-span-6 flex flex-col justify-center space-y-4 text-left">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={currentActivity.id}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -12 }}
+                            transition={{ duration: 0.35, ease: "easeOut" }}
+                            className="space-y-3"
+                          >
+                            {/* Role & Year Header */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-500/10 text-[var(--accent)] border border-indigo-500/20 font-body">
+                                {currentActivity.badge}
+                              </span>
+                              <span className="text-xs text-[var(--text-muted)] font-code font-semibold">
+                                • {currentActivity.period}
+                              </span>
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-xl sm:text-2xl font-extrabold text-[var(--foreground)] font-heading leading-snug">
+                              {currentActivity.title}
+                            </h3>
+
+                            {/* Organization */}
+                            <div className="text-xs sm:text-sm font-semibold text-[var(--accent)] font-body">
+                              {currentActivity.organization}
+                            </div>
+
+                            {/* 2-3 line concise description */}
+                            {currentActivity.description && (
+                              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed font-body line-clamp-3">
+                                {currentActivity.description}
+                              </p>
+                            )}
+
+                            {/* View Details Action */}
+                            <div className="pt-1">
+                              <button
+                                onClick={() => setSelectedActivity(currentActivity)}
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:text-indigo-400 transition-colors group font-body"
+                              >
+                                <span>View Details</span>
+                                <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                              </button>
+                            </div>
+                          </motion.div>
+                        </AnimatePresence>
+
+                        {/* Counter, Progress Bar & Navigation Controls */}
+                        <div className="pt-3 border-t border-[var(--card-border)]/60 space-y-3">
+                          {/* Counter & Controls Row */}
+                          <div className="flex items-center justify-between">
+                            {/* Activity Counter: 01 / 10 */}
+                            <div className="font-code text-sm font-bold text-[var(--foreground)] tracking-wider">
+                              {formattedCounter}
+                            </div>
+
+                            {/* Navigation Buttons (< | Play/Pause | >) */}
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={handlePrevActivity}
+                                className="p-2 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] hover:bg-[var(--badge-bg)] transition-all shadow-sm active:scale-95"
+                                aria-label="Previous activity"
+                                title="Previous photo"
+                              >
+                                <ChevronLeft className="w-4 h-4" />
+                              </button>
+                              
+                              <button
+                                onClick={() => setIsAutoplayPaused(!isAutoplayPaused)}
+                                className={`p-2 rounded-xl border transition-all shadow-sm active:scale-95 ${
+                                  isAutoplayPaused
+                                    ? "bg-amber-500/10 border-amber-500/30 text-amber-500"
+                                    : "bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)]"
+                                }`}
+                                aria-label={isAutoplayPaused ? "Resume autoplay" : "Pause autoplay"}
+                                title={isAutoplayPaused ? "Resume autoplay" : "Pause autoplay"}
+                              >
+                                {isAutoplayPaused ? <Play className="w-4 h-4 fill-amber-500" /> : <Pause className="w-4 h-4" />}
+                              </button>
+
+                              <button
+                                onClick={handleNextActivity}
+                                className="p-2 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] hover:bg-[var(--badge-bg)] transition-all shadow-sm active:scale-95"
+                                aria-label="Next activity"
+                                title="Next photo"
+                              >
+                                <ChevronRight className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Interactive Segmented Progress Bar */}
+                          <div className="flex items-center gap-1.5 w-full">
+                            {ACTIVITIES.map((_, idx) => {
+                              const isActive = idx === currentActivityIdx;
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleJumpToActivity(idx)}
+                                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                                    isActive
+                                      ? "flex-1 bg-gradient-to-r from-indigo-500 to-violet-500 shadow-md shadow-indigo-500/40"
+                                      : "w-3 sm:w-4 bg-[var(--card-border)] hover:bg-[var(--accent)]/50"
+                                  }`}
+                                  aria-label={`Jump to activity ${idx + 1}`}
+                                  title={`Moment ${idx + 1}`}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Slide: Certifications */}
             {activeSlide === "certifications" && (
               <div className="w-full space-y-8">
                 <div className="text-center">
-                  <span className="text-xs font-bold tracking-widest text-[var(--accent)] uppercase">Credentials</span>
-                  <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] mt-2">Certifications & Achievements</h2>
+                  <div className="section-eyebrow justify-center mb-3">Credentials</div>
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Certifications &amp; Achievements</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-h-[60vh] overflow-y-auto pr-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-1">
                   {CERTIFICATIONS.map((cert, idx) => (
-                    <GlowCard key={idx} className="p-6 text-left flex flex-col h-full justify-between">
-                      <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--accent)]">
+                    <GlowCard key={idx} className="p-5 text-left flex flex-col h-full">
+                      <div className="flex-1 space-y-2.5">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-[var(--badge-border)] flex items-center justify-center">
                           {cert.icon}
                         </div>
-                        <h3 className="text-lg font-bold text-[var(--foreground)] line-clamp-2">{cert.title}</h3>
-                        <div className="text-xs text-[var(--text-muted)] font-semibold">{cert.issuer}</div>
-                        <p className="text-xs text-[var(--text-muted)] leading-relaxed">{cert.desc}</p>
+                        <h3 className="text-base font-bold text-[var(--foreground)] font-heading leading-snug line-clamp-2">{cert.title}</h3>
+                        <div className="text-xs text-[var(--accent)] font-semibold font-body">{cert.issuer}</div>
+                        <p className="text-xs text-[var(--text-muted)] leading-relaxed font-body">{cert.desc}</p>
                       </div>
-                      <div className="pt-4 border-t border-[var(--card-border)]/50 mt-4 text-[10px] text-[var(--text-muted)] font-mono">
-                        Date: {cert.date}
+                      <div className="pt-3 border-t border-[var(--card-border)]/50 mt-4">
+                        <span className="skill-badge">{cert.date}</span>
                       </div>
                     </GlowCard>
                   ))}
@@ -786,47 +1237,60 @@ export default function Home() {
             {activeSlide === "contact" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full">
                 {/* Details left */}
-                <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
+                <div className="lg:col-span-5 flex flex-col justify-center space-y-7">
                   <div>
-                    <span className="text-xs font-bold tracking-widest text-[var(--accent)] uppercase">Contact Me</span>
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] mt-2">Get In Touch</h2>
+                    <div className="section-eyebrow mb-3">Contact Me</div>
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading leading-tight">Let&apos;s Work<br />Together.</h2>
                   </div>
                   
-                  <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed">
+                  <p className="text-base text-[var(--text-muted)] leading-relaxed font-body">
                     Have a project in mind, looking for a developer to join your team, or want to build your next intelligence-driven application? My inbox is always open.
                   </p>
 
-                  <div className="space-y-4 pt-2 font-mono text-sm">
+                  <div className="space-y-3 pt-2">
                     <div className="flex items-center gap-4 text-[var(--foreground)]">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl">
+                      <div className="p-3 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 text-[var(--accent)] rounded-xl border border-[var(--badge-border)]">
                         <Mail className="w-5 h-5" />
                       </div>
-                      <span>anuguvaishnavireddy6@gmail.com</span>
+                      <span className="text-sm font-body text-[var(--text-muted)]">anuguvaishnavireddy2@gmail.com</span>
                     </div>
                     <div className="flex items-center gap-4 text-[var(--foreground)]">
-                      <div className="p-3 bg-[var(--badge-bg)] text-[var(--badge-text)] rounded-xl">
+                      <div className="p-3 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 text-[var(--accent)] rounded-xl border border-[var(--badge-border)]">
                         <MapPin className="w-5 h-5" />
                       </div>
-                      <span>Hyderabad, India</span>
+                      <span className="text-sm font-body text-[var(--text-muted)]">Hyderabad, India</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Form right */}
                 <div className="lg:col-span-7 flex flex-col justify-center">
-                  <form className="space-y-4 text-left bg-[var(--card-bg)] border border-[var(--card-border)] p-6 md:p-8 rounded-3xl shadow-sm" onSubmit={(e) => { 
-                        e.preventDefault(); 
-                        const fd = new FormData(e.currentTarget);
-                        window.location.href = `mailto:anuguvaishnavireddy6@gmail.com?subject=Portfolio Contact from ${fd.get('name')}&body=${fd.get('message')}`;
+                  <form ref={formRef} className="space-y-4 text-left glass-card p-6 md:p-8 rounded-3xl" onSubmit={(e) => {
+                    e.preventDefault();
+                    setIsFormSending(true);
+                    setFormStatus("idle");
+                    emailjs.sendForm(
+                      "YOUR_SERVICE_ID",
+                      "YOUR_TEMPLATE_ID",
+                      formRef.current!,
+                      "YOUR_PUBLIC_KEY"
+                    ).then(() => {
+                      setFormStatus("success");
+                      formRef.current?.reset();
+                    }).catch(() => {
+                      setFormStatus("error");
+                    }).finally(() => setIsFormSending(false));
                   }}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <input type="text" name="name" placeholder="Your Name" className="w-full bg-[var(--background)] border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm" required />
-                      <input type="email" name="email" placeholder="Your Email" className="w-full bg-[var(--background)] border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm" required />
+                      <input type="text" name="from_name" placeholder="Your Name" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
+                      <input type="email" name="from_email" placeholder="Your Email" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
                     </div>
-                    <input type="text" name="subject" placeholder="Subject" className="w-full bg-[var(--background)] border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm" required />
-                    <textarea name="message" placeholder="Your Message" rows={4} className="w-full bg-[var(--background)] border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 resize-none text-sm" required></textarea>
-                    <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 text-sm">
-                      <Send className="w-4 h-4" /> Send Message
+                    <input type="text" name="subject" placeholder="Subject" className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 text-sm font-body" required />
+                    <textarea name="message" placeholder="Your Message" rows={4} className="w-full bg-[var(--background)]/60 border border-[var(--card-border)] focus:border-[var(--accent)] rounded-xl px-4 py-3 text-[var(--foreground)] placeholder-[var(--text-muted)] outline-none transition-all duration-300 resize-none text-sm font-body" required></textarea>
+                    {formStatus === "success" && <p className="text-emerald-500 text-sm font-semibold text-center font-body">✅ Message sent successfully!</p>}
+                    {formStatus === "error" && <p className="text-red-500 text-sm font-semibold text-center font-body">❌ Failed to send. Please email directly.</p>}
+                    <button type="submit" disabled={isFormSending} className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 text-sm disabled:opacity-60 font-body">
+                      <Send className="w-4 h-4" /> {isFormSending ? "Sending..." : "Send Message"}
                     </button>
                   </form>
                 </div>
@@ -837,9 +1301,28 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="py-6 text-center border-t border-[var(--card-border)] text-[var(--text-muted)] text-xs z-20 relative bg-[var(--background)] transition-colors duration-300">
-        © {new Date().getFullYear()} Anugu Vaishnavi. All rights reserved.
+      <footer className="py-8 text-center border-t border-[var(--card-border)]/60 text-[var(--text-muted)] text-xs z-20 relative bg-[var(--background)] transition-colors duration-300">
+        <p className="font-body">© {new Date().getFullYear()} <span className="font-semibold text-[var(--foreground)]">Anugu Vaishnavi</span>. All rights reserved.</p>
+        {typeof visitorCount === 'number' && (
+          <p className="mt-1 text-[var(--text-muted)] font-code">👁️ {visitorCount.toLocaleString()} visitors</p>
+        )}
       </footer>
+
+      {/* Back to Home Button */}
+      <AnimatePresence>
+        {activeSlide !== "home" && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={() => navigateToSlide("home")}
+            className="fixed bottom-20 right-4 z-50 p-3 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-full shadow-xl shadow-indigo-500/30 hover:scale-110 transition-all"
+            aria-label="Back to Home"
+          >
+            <ArrowUp className="w-5 h-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Project Details Modal */}
       <AnimatePresence>
@@ -893,6 +1376,151 @@ export default function Home() {
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
+      
+      {/* Activity / Event Lightbox Modal */}
+      <AnimatePresence>
+        {selectedActivity && (() => {
+          const currentIndex = ACTIVITIES.findIndex(a => a.id === selectedActivity.id);
+          const handlePrev = () => {
+            const prevIdx = (currentIndex - 1 + ACTIVITIES.length) % ACTIVITIES.length;
+            setSelectedActivity(ACTIVITIES[prevIdx]);
+          };
+          const handleNext = () => {
+            const nextIdx = (currentIndex + 1) % ACTIVITIES.length;
+            setSelectedActivity(ACTIVITIES[nextIdx]);
+          };
+
+          return (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
+              onClick={() => setSelectedActivity(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.92, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.92, opacity: 0, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl relative flex flex-col transition-all duration-300"
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setSelectedActivity(null)}
+                  className="absolute top-4 right-4 z-30 p-2.5 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full text-white transition-all shadow-lg hover:scale-110"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {/* Left/Right Floating Navigation */}
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-3 top-1/3 -translate-y-1/2 z-30 p-2.5 bg-black/60 hover:bg-indigo-600 backdrop-blur-md rounded-full text-white transition-all shadow-xl hover:scale-110 hidden sm:flex items-center justify-center"
+                  aria-label="Previous photo"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-3 top-1/3 -translate-y-1/2 z-30 p-2.5 bg-black/60 hover:bg-indigo-600 backdrop-blur-md rounded-full text-white transition-all shadow-xl hover:scale-110 hidden sm:flex items-center justify-center"
+                  aria-label="Next photo"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {/* Scrollable Content */}
+                <div className="overflow-y-auto max-h-[90vh]">
+                  {/* High-Resolution Photo Viewer */}
+                  <div className="relative w-full bg-black flex items-center justify-center min-h-[300px] max-h-[55vh] overflow-hidden">
+                    <img
+                      src={selectedActivity.image}
+                      alt={selectedActivity.title}
+                      className="w-full h-auto max-h-[55vh] object-contain"
+                    />
+                    <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+                      <span className={`text-xs font-bold px-3.5 py-1.5 rounded-full shadow-xl bg-gradient-to-r ${selectedActivity.badgeColor}`}>
+                        {selectedActivity.badge}
+                      </span>
+                      <span className="text-[11px] font-semibold px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white/90 border border-white/20 font-code">
+                        {currentIndex + 1} of {ACTIVITIES.length}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Details Section */}
+                  <div className="p-6 md:p-8 space-y-5 text-left">
+                    <div className="space-y-2">
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-[var(--foreground)] font-heading leading-tight">
+                        {selectedActivity.title}
+                      </h2>
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--text-muted)] font-body">
+                        <span className="font-semibold text-[var(--accent)]">{selectedActivity.organization}</span>
+                        <span>•</span>
+                        <span className="font-code text-xs">{selectedActivity.period}</span>
+                      </div>
+                    </div>
+
+                    {selectedActivity.description && (
+                      <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed font-body">
+                        {selectedActivity.description}
+                      </p>
+                    )}
+
+                    {/* Key Highlights */}
+                    {selectedActivity.highlights && selectedActivity.highlights.length > 0 && (
+                      <div className="space-y-2 pt-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] font-code">
+                          Key Takeaways &amp; Highlights:
+                        </h4>
+                        <div className="space-y-2">
+                          {selectedActivity.highlights.map((item, idx) => (
+                            <div key={idx} className="flex items-start gap-2 text-xs md:text-sm text-[var(--foreground)] font-body">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                              <span>{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Tags & Mobile Nav Footer */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[var(--card-border)]/50">
+                      <div className="flex flex-wrap gap-2">
+                        {selectedActivity.tags.map((tag, idx) => (
+                          <span key={idx} className="skill-badge text-xs px-3 py-1">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Mobile Next/Prev Buttons */}
+                      <div className="flex sm:hidden items-center gap-2 w-full justify-between pt-2">
+                        <button
+                          onClick={handlePrev}
+                          className="flex items-center gap-1 px-3.5 py-2 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl text-xs font-semibold"
+                        >
+                          <ChevronLeft className="w-4 h-4" /> Prev
+                        </button>
+                        <span className="text-xs text-[var(--text-muted)] font-code">
+                          {currentIndex + 1} / {ACTIVITIES.length}
+                        </span>
+                        <button
+                          onClick={handleNext}
+                          className="flex items-center gap-1 px-3.5 py-2 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl text-xs font-semibold"
+                        >
+                          Next <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
       </AnimatePresence>
       
     </main>

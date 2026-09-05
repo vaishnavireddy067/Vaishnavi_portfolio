@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#05070d" />
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.8" />
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bgGrad)" stroke="url(#glowGrad)" stroke-width="2" />
+
+  <!-- Neural Connection Nodes and Circuits -->
+  <g opacity="0.4" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="2 2">
+    <line x1="24" y1="36" x2="64" y2="40" />
+    <line x1="104" y1="36" x2="64" y2="40" />
+    <line x1="36" y1="96" x2="64" y2="76" />
+    <line x1="92" y1="96" x2="64" y2="76" />
+  </g>
+
+  <!-- Glowing Nodes -->
+  <circle cx="24" cy="36" r="3" fill="#38bdf8" filter="url(#neonGlow)" />
+  <circle cx="104" cy="36" r="3" fill="#c084fc" filter="url(#neonGlow)" />
+  <circle cx="64" cy="40" r="3.5" fill="#a855f7" filter="url(#neonGlow)" />
+  <circle cx="64" cy="76" r="3" fill="#38bdf8" filter="url(#neonGlow)" />
+
+  <!-- Stylized AV Monogram -->
+  <g filter="url(#neonGlow)">
+    <!-- Letter A -->
+    <path d="M28 92 L54 32 L66 60 L42 60" 
+          stroke="url(#primaryGrad)" 
+          stroke-width="7" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          fill="none" />
+    
+    <!-- Letter V integrated -->
+    <path d="M62 60 L74 92 L100 32" 
+          stroke="url(#primaryGrad)" 
+          stroke-width="7" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          fill="none" />
+          
+    <!-- Core AI Spark -->
+    <circle cx="64" cy="60" r="4.5" fill="#38bdf8" />
+    <circle cx="64" cy="60" r="2" fill="#ffffff" />
+  </g>
+</svg>

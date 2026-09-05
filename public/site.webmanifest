@@ -1,0 +1,19 @@
+{
+  "name": "Anugu Vaishnavi | AI & ML Portfolio",
+  "short_name": "Vaishnavi Portfolio",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/images/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "theme_color": "#090d16",
+  "background_color": "#090d16",
+  "display": "standalone"
+}
