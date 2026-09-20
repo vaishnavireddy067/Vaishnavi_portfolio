@@ -1,63 +1,55 @@
 export const SKILL_CATEGORIES = [
   {
-    title: "ML / AI",
+    title: "AI & ML",
     skills: [
-      "Machine Learning", "Deep Learning", "NLP", "Computer Vision", 
-      "Neural Networks", "Generative AI", "Agentic AI", "LLMs", 
-      "RAG", "AI Agents", "Prompt Engineering", "Explainable AI (SHAP/LIME)", 
-      "Anomaly Detection", "Conversational AI", "Voice AI (STT/TTS)", 
-      "Semantic Search", "AI Workflow Orchestration"
+      "Machine Learning", "GenAI", "Agentic AI", "RAG", "LLMs", 
+      "AI Agents", "TensorFlow", "PyTorch", "AI Orchestration Flow", 
+      "Computer Vision", "NLP", "Voice AI"
     ]
   },
   {
-    title: "Frameworks",
+    title: "Programming",
     skills: [
-      "Scikit-learn", "TensorFlow", "PyTorch", "LangChain", 
-      "LangGraph", "Hugging Face", "OpenCV", "Streamlit", 
-      "Flask", "FastAPI", "AutoGen", "CrewAI", 
-      "OpenAI Agents SDK", "Whisper API"
+      "Python", "Java", "C", "JavaScript (ES6+)", "SQL"
     ]
   },
   {
-    title: "Data Science",
+    title: "Core CS",
     skills: [
-      "Exploratory Data Analysis (EDA)", "Feature Engineering", "Statistical Analysis", 
-      "Data Preprocessing", "Data Wrangling", "Predictive Analytics", 
-      "Data Visualization", "Model Evaluation & Tuning"
+      "Data Structures & Algorithms", "Object-Oriented Programming (OOPs)", 
+      "Operating Systems (OS)", "System Design", "Computer Networks (CN)", "DBMS"
     ]
   },
   {
-    title: "Languages",
+    title: "Backend",
     skills: [
-      "Python", "SQL", "C", "Java (Intermediate)"
+      "Flask", "FastAPI", "REST API Design", "Firebase Auth & Firestore", "Node.js"
     ]
   },
   {
-    title: "Data & BI Tools",
+    title: "Frontend",
     skills: [
-      "NumPy", "Pandas", "Power BI", "Tableau", "Matplotlib", 
-      "Seaborn", "Microsoft Excel", "Jupyter Notebook", "Google Colab"
+      "HTML5", "CSS3", "JavaScript (ES6+)", "React.js", "Responsive UI Design", "Bootstrap", "TailwindCSS"
     ]
   },
   {
-    title: "Databases",
+    title: "Data Management",
     skills: [
-      "MySQL", "PostgreSQL", "MongoDB", "ChromaDB", "FAISS"
+      "SQL (MySQL, PostgreSQL, SQLite)", "MongoDB", "Data Modeling", 
+      "Data Cleaning & Preprocessing", "Validation", "ETL", "Analytics", "Python for Analysis"
     ]
   },
   {
-    title: "Web / Dev Tools",
+    title: "Tools & Practices",
     skills: [
-      "HTML", "CSS", "JavaScript", "React", "Git", "GitHub", 
-      "VS Code", "Postman"
+      "Git", "GitHub", "VS Code", "Postman", "Agile/Scrum", "SDLC", "Debugging & Testing"
     ]
   },
   {
-    title: "Soft Skills",
+    title: "Engineering & Soft Skills",
     skills: [
-      "Analytical Thinking", "Problem Solving", "Research", 
-      "Data Storytelling", "Cross-Functional Teamwork", "Documentation", 
-      "Leadership", "Communication"
+      "Software Development", "Unit Testing", "Technical Documentation", 
+      "System Integration", "Problem Solving", "Ownership", "Time Management", "Continuous Learning"
     ]
   }
 ];

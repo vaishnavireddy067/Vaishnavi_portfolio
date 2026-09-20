@@ -18,6 +18,7 @@ import { ACTIVITIES, ActivityItem } from "../data/activities";
 import DownloadDropdown from "../components/DownloadDropdown";
 import emailjs from "@emailjs/browser";
 import TechBackground from "../components/TechBackground";
+import LaunchShowcaseLanding from "../components/LaunchShowcaseLanding";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg className={`${className || ""} pointer-events-none`} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -212,96 +213,41 @@ const getSkillIcon = (skillName: string) => {
   return <Terminal className="w-6 h-6 text-[var(--accent)]" />;
 };
 
-const LOCAL_PROJECTS = [
-  {
-    name: "Air Drawing System",
-    desc: "Real-time virtual drawing system converting a webcam into a virtual whiteboard using gesture recognition.",
-    longDesc: "This project leverages MediaPipe and OpenCV to track hand landmarks in real-time, allowing users to draw in mid-air. It demonstrates complex state management for continuous gesture tracking and rendering.",
-    tech: ["Python", "OpenCV", "MediaPipe"],
-    github: "https://github.com/vaishnavireddy067/AIR-DRAWING",
-    demo: true,
-    color: "from-blue-600 to-cyan-500"
-  },
-  {
-    name: "ADAMSS Analytics",
-    desc: "Autonomous Data Analytics Model Stability System. A low-code platform automating EDA, model tuning, and monitoring.",
-    longDesc: "ADAMSS streamlines the entire data science pipeline. Users can upload datasets and automatically receive exploratory data analysis, train machine learning models, and monitor performance securely from their browser.",
-    tech: ["Python", "Machine Learning", "Streamlit"],
-    github: "https://github.com/vaishnavireddy067/ADAMSS-Autonomous-Data-Analytics-Model-Stability-System",
-    demo: true,
-    color: "from-purple-600 to-indigo-500"
-  },
-  {
-    name: "AuraAgent Platform",
-    desc: "A premium multi-agent platform coordinating autonomous research and report synthesis via LangChain/CrewAI.",
-    longDesc: "AuraAgent leverages specialized LLM agents structured into hierarchical groups. An orchestrator distributes web scraping, semantic search, and summary compilation tasks, delivering production-ready technical reports securely.",
-    tech: ["Python", "LangChain", "CrewAI", "FastAPI"],
-    github: "https://github.com/vaishnavireddy067",
-    demo: true,
-    color: "from-pink-600 to-rose-500"
-  },
-  {
-    name: "IrisXplain AI",
-    desc: "Multi-model prediction system offering confidence scoring and XAI techniques for feature importance.",
-    longDesc: "Built to bring transparency to ML models, this tool uses Explainable AI (XAI) to break down model predictions. It features dynamic dashboards and confidence scoring to help stakeholders trust AI decisions.",
-    tech: ["Scikit-learn", "Streamlit", "Python"],
-    github: "https://github.com/vaishnavireddy067",
-    demo: false,
-    color: "from-teal-500 to-emerald-400"
-  },
-  {
-    name: "RT-AIDIS",
-    desc: "Real-time AI monitoring platform aimed at anomaly detection across manufacturing and healthcare.",
-    longDesc: "A high-performance anomaly detection system capable of monitoring real-time data streams. Highly useful in IoT contexts where rapid detection of outliers is critical for system integrity.",
-    tech: ["JavaScript", "AI Core"],
-    github: "https://github.com/vaishnavireddy067/RT-AIDIS-IntegrityAI",
-    demo: true,
-    color: "from-orange-500 to-red-500"
-  }
-];
-
 const CERTIFICATIONS = [
   {
-    title: "GenAI Forge Hackathon Winner",
-    issuer: "Hackathon Organizer",
-    date: "2024",
+    title: "Winner — GenAI Forge Hackathon",
+    issuer: "Nasscom",
+    date: "Jan 2026",
     desc: "First Place for building complex multi-agent generative workflow models under constraints.",
     icon: <Award className="w-6 h-6 text-purple-500" />
   },
   {
-    title: "Smart India Hackathon (SIH) Participant",
-    issuer: "Ministry of Education, Govt of India",
-    date: "2023",
-    desc: "National level recognition for innovative artificial intelligence project development.",
-    icon: <Award className="w-6 h-6 text-blue-500" />
-  },
-  {
-    title: "Poster Presentation Winner (1st Prize)",
-    issuer: "SIH Committee",
-    date: "2023",
-    desc: "Secured first prize for layout design and presentation logic explanation of AI system structures.",
-    icon: <Award className="w-6 h-6 text-teal-500" />
-  },
-  {
-    title: "Agentic AI Coordinator Credential",
-    issuer: "AVN AI & DS Department",
-    date: "2024",
-    desc: "Successful supervision and conceptual outline guidance for Agentic AI workshops.",
-    icon: <Briefcase className="w-6 h-6 text-indigo-500" />
-  },
-  {
-    title: "MSME Hackathon Participant",
-    issuer: "Ministry of MSME",
-    date: "2024",
-    desc: "Developed and prototyped AI solutions assisting small & medium size enterprise systems.",
+    title: "Web Development (Credly Verified)",
+    issuer: "Codec Technologies",
+    date: "2025",
+    desc: "Comprehensive full-stack web development and responsive architecture certification.",
     icon: <Code className="w-6 h-6 text-emerald-500" />
   },
   {
-    title: "Namespace Hackathon Certificate",
-    issuer: "Tech Network Community",
+    title: "Frontend Development",
+    issuer: "Elite Coders",
+    date: "2025",
+    desc: "Modern frontend web technologies, React.js UI engineering, and design systems.",
+    icon: <Layout className="w-6 h-6 text-blue-500" />
+  },
+  {
+    title: "Artificial Intelligence Fundamentals",
+    issuer: "IBM",
     date: "2024",
-    desc: "Participated and showcased scalable rapid prototype developments using cloud databases.",
-    icon: <GitBranch className="w-6 h-6 text-blue-500" />
+    desc: "Core artificial intelligence concepts, workflow automation, and intelligent solution architecture.",
+    icon: <Brain className="w-6 h-6 text-indigo-500" />
+  },
+  {
+    title: "Machine Learning",
+    issuer: "Innomatics Research Labs",
+    date: "2024",
+    desc: "Applied machine learning algorithms, model training, feature engineering, and evaluation pipelines.",
+    icon: <Cpu className="w-6 h-6 text-teal-500" />
   }
 ];
 
@@ -311,7 +257,7 @@ const EDUCATION = [
     degree: "B.Tech – Artificial Intelligence & Data Science",
     period: "2023 - 2027 • Ongoing",
     location: "Hyderabad",
-    details: ""
+    details: "Score: 85% | CGPA: 8.72"
   },
   {
     institution: "Pragati Junior College",
@@ -333,19 +279,19 @@ const EXPERIENCE = [
   {
     role: "AI Backend Engineer Intern",
     company: "FlyRank",
-    period: "Jul 2026 – Aug 2026 | Remote",
+    period: "Jul 2026 – Present | Remote",
     location: "Remote",
-    description: "Designed scalable backend APIs integrating AI/ML pipelines (Computer Vision, NLP, Agentic AI, Voice AI) into production-ready applications, collaborating with global cross-functional teams.",
+    description: "Building backend services and APIs that power AI-driven features across computer vision, NLP, agentic AI, and voice AI. Contributing to full-stack AI application development, integrating backend logic with AI/ML pipelines for production-ready features.",
     tech: ["Python", "Computer Vision", "NLP", "Agentic AI", "Voice AI", "FastAPI"],
     color: "from-blue-600 to-cyan-500"
   },
   {
-    role: "AI Automation & Intelligent Solutions Intern",
-    company: "IBM SkillsBuild (BharatCares)",
-    period: "Jun 2026 – Jul 2026 | Remote",
+    role: "AI Automation and Intelligence Intern",
+    company: "IBM CSR BharatCares",
+    period: "Jul 2026 – Aug 2026 | Remote",
     location: "Remote",
-    description: "Completed a 6-week internship on AI automation and intelligent solutions, in association with BharatCares and AICTE. (Certificate ID: BHIBMAC11845)",
-    tech: ["AI Automation", "IBM SkillsBuild", "Intelligent Solutions"],
+    description: "Contributed to an AI-driven automation and intelligence system for the BharatCares CSR platform, streamlining manual workflows and reducing repetitive operational tasks. Worked on integrating AI-based automation modules with existing systems for data-driven monitoring and reporting.",
+    tech: ["AI Automation", "IBM CSR", "Intelligent Systems", "Python"],
     color: "from-indigo-600 to-blue-500"
   },
   {
@@ -353,8 +299,8 @@ const EXPERIENCE = [
     company: "Coding Blocks School of Technology",
     period: "Jun 2026 – Jul 2026 | Remote",
     location: "Remote",
-    description: "Trained and evaluated ML models for applied AI tasks, embedding LLM and GenAI APIs into application workflows through structured debugging and implementation.",
-    tech: ["Python", "Machine Learning", "LLM", "GenAI APIs"],
+    description: "Built and trained machine learning models for applied AI tasks, covering data preprocessing, training, and evaluation. Worked on GenAI and LLM-powered features, integrating language model APIs into application workflows and connecting via REST APIs.",
+    tech: ["Python", "Machine Learning", "GenAI", "LLM APIs", "REST APIs"],
     color: "from-purple-600 to-indigo-500"
   },
   {
@@ -362,8 +308,8 @@ const EXPERIENCE = [
     company: "Viswam.ai (SoAI)",
     period: "Jun 2024 – Aug 2024 | Hybrid",
     location: "Hybrid",
-    description: "Cleaned and validated 5,000+ real-world records using Python (Pandas, NumPy), cutting data-preparation time by approximately 30% through systematic feature engineering.",
-    tech: ["Python", "Pandas", "NumPy", "Feature Engineering"],
+    description: "Cleaned and structured large real-world datasets using Python (Pandas, NumPy), reducing data-preparation time by approximately 30%. Performed data validation, feature engineering, and quality checks to produce accurate, analysis-ready datasets.",
+    tech: ["Python", "Pandas", "NumPy", "Data Preprocessing", "Feature Engineering"],
     color: "from-teal-500 to-emerald-400"
   }
 ];
@@ -398,6 +344,7 @@ export default function Home() {
   const [isFormSending, setIsFormSending] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
+  const [hasEnteredPortfolio, setHasEnteredPortfolio] = useState(false);
 
   // Autoplay photo reel every ~2.2 seconds (runs continuously, pauses only if user clicks pause button or modal is open)
   useEffect(() => {
@@ -475,49 +422,85 @@ export default function Home() {
       {/* Animated Tech Pattern Background */}
       <TechBackground isDark={isDarkMode} />
 
-      {/* Navigation Header */}
-      <nav className="fixed top-0 w-full z-50 bg-[var(--nav-bg)] backdrop-blur-2xl border-b border-[var(--card-border)]/60 transition-colors duration-300 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
-           {/* Logo Branding */}
-           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigateToSlide("home")}>
-             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-extrabold shadow-lg shadow-indigo-500/25 text-sm font-heading">AV</div>
-             <span className="text-lg font-bold tracking-tight text-[var(--foreground)] font-heading hidden sm:block">Anugu Vaishnavi</span>
-           </div>
-           
-           {/* Navigation Centered Slide Links */}
-           <div className="hidden md:flex gap-0.5 p-1.5 glass-card rounded-2xl">
-             <button onClick={() => navigateToSlide("home")} className={getLinkClasses("home")}>Home</button>
-             <button onClick={() => navigateToSlide("about")} className={getLinkClasses("about")}>About</button>
-             <button onClick={() => navigateToSlide("skills")} className={getLinkClasses("skills")}>Skills</button>
-             <button onClick={() => navigateToSlide("education")} className={getLinkClasses("education")}>Education</button>
-             <button onClick={() => navigateToSlide("experience")} className={getLinkClasses("experience")}>Experience</button>
-             <button onClick={() => navigateToSlide("projects")} className={getLinkClasses("projects")}>Projects</button>
-             <button onClick={() => navigateToSlide("activities")} className={getLinkClasses("activities")}>Activities</button>
-             <button onClick={() => navigateToSlide("certifications")} className={getLinkClasses("certifications")}>Certs</button>
-             <button onClick={() => navigateToSlide("contact")} className={getLinkClasses("contact")}>Contact</button>
-           </div>
-           
-           {/* Socials & Theme Toggle right */}
-           <div className="flex items-center gap-2">
-             <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
-               <GithubIcon className="w-4.5 h-4.5" />
-             </a>
-             <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
-               <LinkedinIcon className="w-4.5 h-4.5" />
-             </a>
-             <button 
-               onClick={() => setIsDarkMode(!isDarkMode)}
-               className="p-2.5 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] transition-all shadow-sm"
-               aria-label="Toggle Theme"
-             >
-               {isDarkMode ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-indigo-500" />}
-             </button>
-             <button className="md:hidden p-2 text-[var(--text-muted)] hover:text-[var(--foreground)] focus:outline-none" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-               <Menu className="w-5 h-5" />
-             </button>
-           </div>
-        </div>
-      </nav>
+      {/* Main Experience Switcher: 3D Launch Showcase Landing vs Full Portfolio */}
+      <AnimatePresence mode="wait">
+        {!hasEnteredPortfolio ? (
+          <motion.div
+            key="launch-showcase-landing"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.03, filter: "blur(8px)" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full relative z-20"
+          >
+            <LaunchShowcaseLanding 
+              onEnterPortfolio={(targetSlide = "home") => {
+                setActiveSlide(targetSlide);
+                setHasEnteredPortfolio(true);
+              }}
+              isDarkMode={isDarkMode}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="portfolio-main-view"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full relative z-10"
+          >
+            {/* Navigation Header */}
+            <nav className="fixed top-0 w-full z-50 bg-[var(--nav-bg)] backdrop-blur-2xl border-b border-[var(--card-border)]/60 transition-colors duration-300 shadow-sm">
+              <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
+                 {/* Logo Branding */}
+                 <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigateToSlide("home")}>
+                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-extrabold shadow-lg shadow-indigo-500/25 text-sm font-heading">AV</div>
+                   <span className="text-lg font-bold tracking-tight text-[var(--foreground)] font-heading hidden sm:block">Anugu Vaishnavi</span>
+                 </div>
+                 
+                 {/* Navigation Centered Slide Links */}
+                 <div className="hidden md:flex gap-0.5 p-1.5 glass-card rounded-2xl">
+                   <button onClick={() => navigateToSlide("home")} className={getLinkClasses("home")}>Home</button>
+                   <button onClick={() => navigateToSlide("about")} className={getLinkClasses("about")}>About</button>
+                   <button onClick={() => navigateToSlide("skills")} className={getLinkClasses("skills")}>Skills</button>
+                   <button onClick={() => navigateToSlide("education")} className={getLinkClasses("education")}>Education</button>
+                   <button onClick={() => navigateToSlide("experience")} className={getLinkClasses("experience")}>Experience</button>
+                   <button onClick={() => navigateToSlide("projects")} className={getLinkClasses("projects")}>Projects</button>
+                   <button onClick={() => navigateToSlide("activities")} className={getLinkClasses("activities")}>Activities</button>
+                   <button onClick={() => navigateToSlide("certifications")} className={getLinkClasses("certifications")}>Certs</button>
+                   <button onClick={() => navigateToSlide("contact")} className={getLinkClasses("contact")}>Contact</button>
+                 </div>
+                 
+                 {/* Socials, 3D Showcase & Theme Toggle right */}
+                 <div className="flex items-center gap-2">
+                   <button
+                     onClick={() => setHasEnteredPortfolio(false)}
+                     className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-xs font-semibold transition-all shadow-sm"
+                     title="Switch to 3D Showcase Landing Page"
+                   >
+                     <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                     <span>Landing</span>
+                   </button>
+                   <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
+                     <GithubIcon className="w-4.5 h-4.5" />
+                   </a>
+                   <a href="https://www.linkedin.com/in/anugu-vaishnavi-651a67353" target="_blank" rel="noopener noreferrer" className="hidden sm:flex p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--foreground)] hover:bg-[var(--badge-bg)] transition-all">
+                     <LinkedinIcon className="w-4.5 h-4.5" />
+                   </a>
+                   <button 
+                     onClick={() => setIsDarkMode(!isDarkMode)}
+                     className="p-2.5 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:border-[var(--card-hover-border)] transition-all shadow-sm"
+                     aria-label="Toggle Theme"
+                   >
+                     {isDarkMode ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-indigo-500" />}
+                   </button>
+                   <button className="md:hidden p-2 text-[var(--text-muted)] hover:text-[var(--foreground)] focus:outline-none" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                     <Menu className="w-5 h-5" />
+                   </button>
+                 </div>
+              </div>
+            </nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -528,6 +511,15 @@ export default function Home() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden fixed top-[72px] left-0 w-full bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-2xl z-40 flex flex-col px-6 py-6 gap-3 transition-colors duration-300"
           >
+             <button 
+               onClick={() => {
+                 setHasEnteredPortfolio(false);
+                 setIsMobileMenuOpen(false);
+               }} 
+               className="text-base font-semibold transition-all py-2.5 px-4 rounded-xl cursor-pointer font-body text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center gap-2"
+             >
+               <Sparkles className="w-4 h-4" /> 3D Landing Showcase
+             </button>
              <button onClick={() => navigateToSlide("home")} className={getMobileLinkClasses("home")}>Home</button>
              <button onClick={() => navigateToSlide("about")} className={getMobileLinkClasses("about")}>About</button>
              <button onClick={() => navigateToSlide("skills")} className={getMobileLinkClasses("skills")}>Skills</button>
@@ -537,6 +529,7 @@ export default function Home() {
              <button onClick={() => navigateToSlide("activities")} className={getMobileLinkClasses("activities")}>Activities &amp; Moments</button>
              <button onClick={() => navigateToSlide("certifications")} className={getMobileLinkClasses("certifications")}>Certifications</button>
              <button onClick={() => navigateToSlide("contact")} className={getMobileLinkClasses("contact")}>Contact</button>
+             
              <div className="flex items-center gap-4 pt-4 border-t border-[var(--card-border)]/50 justify-center">
                 <a href="https://github.com/vaishnavireddy067" target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--card-border)] bg-[var(--background)] text-[var(--text-muted)] hover:text-[var(--foreground)] rounded-full transition-all">
                   <GithubIcon className="w-5 h-5 pointer-events-none" />
@@ -729,37 +722,90 @@ export default function Home() {
 
         {/* Slide: Projects */}
         {activeSlide === "projects" && (
-          <div className="w-full space-y-8">
+          <div className="w-full space-y-8 max-w-6xl mx-auto">
             <div className="text-center">
               <div className="section-eyebrow justify-center mb-3">Projects</div>
               <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Featured Projects</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="flex flex-wrap justify-center gap-6">
               {PROJECTS.map((proj, idx) => (
-                <GlowCard
-                  key={idx}
-                  className="flex flex-col h-full overflow-hidden"
-                  onClick={() => setSelectedProject(proj)}
-                  aria-label={`Open ${proj.name} details`}
-                >
-                  {/* Gradient header band */}
-                  <div className={`h-2 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
-                  {proj.image && (
-                    <img src={proj.image} alt={`${proj.name} screenshot`} className="w-full h-36 object-cover" />
-                  )}
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-[var(--foreground)] font-heading mb-1">{proj.name}</h3>
-                    <p className="text-sm text-[var(--text-muted)] line-clamp-2 font-body leading-relaxed flex-1">{proj.desc}</p>
-                    {proj.impact && <p className="text-xs text-[var(--accent)] mt-2 font-medium font-body">{proj.impact}</p>}
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {proj.tech.slice(0, 3).map((t: string) => (
-                        <span key={t} className="skill-badge">{t}</span>
-                      ))}
-                      {proj.tech.length > 3 && <span className="skill-badge">+{proj.tech.length - 3}</span>}
-                    </div>
+                <div key={idx} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
+                  <GlowCard
+                    className="flex flex-col w-full h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 group"
+                    onClick={() => setSelectedProject(proj)}
+                    aria-label={`Open ${proj.name} details`}
+                  >
+                    {/* Gradient header band */}
+                    <div className={`h-1.5 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
+                    {proj.image && (
+                      <img src={proj.image} alt={`${proj.name} screenshot`} className="w-full h-36 object-cover" />
+                    )}
+                    <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
+                      <div>
+                        {/* Title with uniform height */}
+                        <h3 
+                          className="text-base sm:text-lg font-bold text-[var(--foreground)] font-heading mb-2 leading-snug line-clamp-2 h-14 flex items-start" 
+                          title={proj.name}
+                        >
+                          {proj.name}
+                        </h3>
 
-                  </div>
-                </GlowCard>
+                        {/* Description with uniform height */}
+                        <p className="text-xs sm:text-sm text-[var(--text-muted)] line-clamp-2 font-body leading-relaxed h-10 mb-2.5">
+                          {proj.desc}
+                        </p>
+
+                        {/* Impact highlight with uniform height */}
+                        <div className="h-8 mb-3 flex items-center">
+                          {proj.impact ? (
+                            <p className="text-xs text-[var(--accent)] font-medium font-body line-clamp-2">
+                              {proj.impact}
+                            </p>
+                          ) : <div />}
+                        </div>
+
+                        {/* Tech tags with uniform height */}
+                        <div className="flex flex-wrap gap-1.5 h-7 items-center overflow-hidden mb-3">
+                          {proj.tech.slice(0, 3).map((t: string) => (
+                            <span key={t} className="skill-badge text-[11px] py-0.5 px-2">{t}</span>
+                          ))}
+                          {proj.tech.length > 3 && (
+                            <span className="skill-badge text-[11px] py-0.5 px-1.5">+{proj.tech.length - 3}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Footer Actions with aligned buttons */}
+                      <div className="flex items-center gap-2 mt-auto pt-3 border-t border-[var(--border-subtle)] text-xs font-semibold">
+                        {proj.demo && (
+                          <a
+                            href={proj.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/15 text-blue-400 hover:bg-blue-600 hover:text-white transition-all border border-blue-500/30 shadow-sm"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                          </a>
+                        )}
+                        {proj.github && (
+                          <a
+                            href={proj.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:text-white transition-all border border-gray-700/50"
+                          >
+                            <GithubIcon className="w-3.5 h-3.5" /> Source
+                          </a>
+                        )}
+                        <span className="ml-auto text-xs text-[var(--accent)] font-medium group-hover:translate-x-0.5 transition-transform">
+                          Details →
+                        </span>
+                      </div>
+                    </div>
+                  </GlowCard>
+                </div>
               ))}
             </div>
           </div>
@@ -1379,16 +1425,23 @@ export default function Home() {
                   </div>
                   
                   <h3 className="text-xl font-bold text-[var(--foreground)] mb-2">Project Overview</h3>
-                  <p className="text-[var(--text-muted)] leading-relaxed mb-8 text-sm md:text-base">{selectedProject.longDesc}</p>
+                  <p className="text-[var(--text-muted)] leading-relaxed mb-8 text-sm md:text-base">{selectedProject.longDesc || selectedProject.desc}</p>
                   
                   <div className="flex flex-col sm:flex-row gap-4">
-                     <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold">
-                       <GithubIcon className="w-5 h-5" /> View Source Code
-                     </a>
+                     {selectedProject.github && (
+                       <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold">
+                         <GithubIcon className="w-5 h-5" /> View Source Code
+                       </a>
+                     )}
                      {selectedProject.demo && (
-                        <button onClick={() => alert("Local demo environment currently executing. Deployment pending.")} className="flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-500 transition-colors font-semibold shadow-lg shadow-blue-500/20">
+                        <a
+                          href={typeof selectedProject.demo === 'string' ? selectedProject.demo : '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl transition-all font-semibold shadow-lg shadow-blue-500/20"
+                        >
                            <ExternalLink className="w-5 h-5" /> Launch Live Application
-                        </button>
+                        </a>
                      )}
                   </div>
                </div>
@@ -1540,6 +1593,10 @@ export default function Home() {
             </motion.div>
           );
         })()}
+      </AnimatePresence>
+
+          </motion.div>
+        )}
       </AnimatePresence>
       
     </main>
