@@ -1,5 +1,17 @@
+export interface Project {
+  name: string;
+  desc: string;
+  longDesc?: string;
+  impact?: string;
+  tech: string[];
+  demo?: string;
+  github?: string;
+  color?: string;
+  image?: string;
+}
+
 // Exported projects data used across the portfolio
-export const PROJECTS = [
+export const PROJECTS: Project[] = [
   {
     name: "AirCanvas AI – Multimodal Air Drawing & Interaction Platform",
     desc: "Real-time virtual drawing and gesture interaction platform converting webcam input into a virtual canvas using computer vision and multimodal gesture tracking.",
@@ -9,6 +21,7 @@ export const PROJECTS = [
     demo: "https://air-canvas-flame.vercel.app/",
     github: "https://github.com/vaishnavireddy067/AIR-DRAWING",
     color: "from-blue-600 to-cyan-500",
+    image: "/images/projects/aircanvas.jpg",
   },
   {
     name: "QIVORA — Adaptive Cognitive Assessment & Procedural Game Platform",
@@ -19,6 +32,7 @@ export const PROJECTS = [
     demo: "https://qivora-adaptive-cognitive-assessmen.vercel.app/",
     github: "https://github.com/vaishnavireddy067/QIVORA-Adaptive-Cognitive-Assessment-Procedural-Game-Platform",
     color: "from-cyan-500 to-indigo-600",
+    image: "/images/projects/qivora.jpg",
   },
   {
     name: "ResearchPilot | Autonomous Research Hub",
@@ -29,6 +43,7 @@ export const PROJECTS = [
     demo: "https://research-orbit-six.vercel.app/",
     github: "https://github.com/vaishnavireddy067/ResearchPilot-AI",
     color: "from-indigo-600 to-purple-500",
+    image: "/images/projects/researchpilot.jpg",
   },
   {
     name: "AVNIET – Smart College Management System",
@@ -39,6 +54,7 @@ export const PROJECTS = [
     demo: "https://adaptive-learning-management-and-sm-zeta.vercel.app/",
     github: "https://github.com/vaishnavireddy067/Adaptive-Learning-Management",
     color: "from-purple-600 to-pink-500",
+    image: "/images/projects/avniet.jpg",
   },
   {
     name: "AI CareMatch — Trust-Based Caregiver Intelligence Platform",
@@ -49,6 +65,7 @@ export const PROJECTS = [
     demo: "https://ai-care-match1.vercel.app/",
     github: "https://github.com/vaishnavireddy067/AI-CareMatch",
     color: "from-red-600 to-orange-500",
+    image: "/images/projects/carematch.jpg",
   },
   {
     name: "RT-AIDIS | Integrity AI – Real-Time Anomaly Detection Platform",
@@ -59,5 +76,6 @@ export const PROJECTS = [
     demo: "https://rt-aidis-integrity-ai-three.vercel.app/",
     github: "https://github.com/vaishnavireddy067/RT-AIDIS-IntegrityAI",
     color: "from-orange-500 to-red-500",
+    image: "/images/projects/rtaidis.jpg",
   },
 ];

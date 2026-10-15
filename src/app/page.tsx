@@ -738,7 +738,17 @@ export default function Home() {
                     {/* Gradient header band */}
                     <div className={`h-1.5 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
                     {proj.image && (
-                      <img src={proj.image} alt={`${proj.name} screenshot`} className="w-full h-36 object-cover" />
+                      <div className="relative w-full h-44 overflow-hidden bg-black/40">
+                        <img 
+                          src={proj.image} 
+                          alt={`${proj.name} preview`} 
+                          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] via-transparent to-transparent opacity-80" />
+                        <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-black/70 backdrop-blur-md text-white/95 border border-white/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Preview
+                        </div>
+                      </div>
                     )}
                     <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
                       <div>
@@ -1410,10 +1420,21 @@ export default function Home() {
                   <X className="w-5 h-5" />
                </button>
                
-               <div className={`h-48 md:h-64 w-full bg-gradient-to-br ${selectedProject.color} relative`}>
-                  <div className="absolute inset-0 bg-black/20" />
-                  <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-[var(--card-bg)] to-transparent" />
-               </div>
+               {selectedProject.image ? (
+                 <div className="relative h-52 md:h-72 w-full overflow-hidden bg-black">
+                   <img 
+                     src={selectedProject.image} 
+                     alt={selectedProject.name} 
+                     className="w-full h-full object-cover object-top"
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] via-[var(--card-bg)]/40 to-black/20" />
+                 </div>
+               ) : (
+                 <div className={`h-48 md:h-64 w-full bg-gradient-to-br ${selectedProject.color} relative`}>
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-[var(--card-bg)] to-transparent" />
+                 </div>
+               )}
                
                <div className="p-8 md:p-10 -mt-10 relative z-10">
                   <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--foreground)] mb-4">{selectedProject.name}</h2>
