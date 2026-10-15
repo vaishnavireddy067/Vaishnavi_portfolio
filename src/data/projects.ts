@@ -11,6 +11,16 @@ export const PROJECTS = [
     color: "from-blue-600 to-cyan-500",
   },
   {
+    name: "QIVORA — Adaptive Cognitive Assessment & Procedural Game Platform",
+    desc: "Authoritative, procedurally-generated cognitive training and psychometric assessment platform featuring 8 bespoke mental arenas, real-time telemetry, 1v1 duels, and interactive orbital engines.",
+    longDesc: "QIVORA is an authoritative, procedurally-generated cognitive agility and psychometric evaluation platform. Powered by an algorithmic FastAPI backend and an interactive React 19 / Vite tactile frontend, QIVORA delivers 8 bespoke mental arenas with real-time telemetry tracking, 1v1 ghost duels, and anti-cheat validation.",
+    impact: "Delivered 8 procedural cognitive arenas with sub-millisecond telemetry and adaptive difficulty scoring.",
+    tech: ["React 19", "TypeScript", "Vite", "FastAPI", "Python", "TailwindCSS"],
+    demo: "https://qivora-adaptive-cognitive-assessmen.vercel.app/",
+    github: "https://github.com/vaishnavireddy067/QIVORA-Adaptive-Cognitive-Assessment-Procedural-Game-Platform",
+    color: "from-cyan-500 to-indigo-600",
+  },
+  {
     name: "ResearchPilot | Autonomous Research Hub",
     desc: "Created an AI platform for automated document summarization, keyword extraction, and intelligent Q&A over research papers, reducing literature-review time by 60% in an academic pilot.",
     longDesc: "ResearchPilot is an autonomous research hub and AI-driven literature review engine. It orchestrates intelligent document processing, deep multi-source semantic search, paper summarization, and citation graphs to accelerate scientific discovery and literature synthesis.",
