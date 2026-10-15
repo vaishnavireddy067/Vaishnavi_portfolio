@@ -1,3 +1,17 @@
+export interface ArchitectureTier {
+  name: string;
+  role: string;
+  tech: string[];
+}
+
+export interface ProjectArchitecture {
+  frontend: ArchitectureTier;
+  backend: ArchitectureTier;
+  database: ArchitectureTier;
+  aiModel: ArchitectureTier;
+  dataFlow: string[];
+}
+
 export interface Project {
   name: string;
   desc: string;
@@ -8,6 +22,7 @@ export interface Project {
   github?: string;
   color?: string;
   image?: string;
+  architecture?: ProjectArchitecture;
 }
 
 // Exported projects data used across the portfolio
@@ -22,6 +37,34 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/AIR-DRAWING",
     color: "from-blue-600 to-cyan-500",
     image: "/images/projects/aircanvas.jpg",
+    architecture: {
+      frontend: {
+        name: "Next.js & HTML5 Canvas Client",
+        role: "Real-time webcam video feed display, interactive mid-air canvas, brush palette selector, and gesture HUD overlay.",
+        tech: ["Next.js", "React", "HTML5 Canvas", "TailwindCSS"],
+      },
+      backend: {
+        name: "FastAPI Computer Vision Server",
+        role: "High-frequency frame coordinate normalization, stroke trajectory interpolation, and WebSocket streaming pipeline.",
+        tech: ["Python", "FastAPI", "WebSockets", "AsyncIO"],
+      },
+      database: {
+        name: "Canvas State & Drawing Cache",
+        role: "Client-side stroke path serialization, preset palettes, and PNG/SVG export vector storage.",
+        tech: ["IndexedDB", "Local Storage", "In-Memory Buffer"],
+      },
+      aiModel: {
+        name: "MediaPipe Hands & OpenCV Vision Pipeline",
+        role: "21 3D hand landmark estimation, fingertip velocity tracking, dynamic gesture recognition (draw, erase, pan).",
+        tech: ["MediaPipe", "OpenCV", "NumPy", "Computer Vision"],
+      },
+      dataFlow: [
+        "Webcam captures user hand motion in real-time at 60 FPS",
+        "MediaPipe extracts 21 3D hand landmarks & fingertip coordinates",
+        "OpenCV gesture classifier detects drawing vs. hover vs. erase state",
+        "HTML5 Canvas engine renders smoothed strokes with zero physical contact",
+      ],
+    },
   },
   {
     name: "QIVORA — Adaptive Cognitive Assessment & Procedural Game Platform",
@@ -33,6 +76,34 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/QIVORA-Adaptive-Cognitive-Assessment-Procedural-Game-Platform",
     color: "from-cyan-500 to-indigo-600",
     image: "/images/projects/qivora.jpg",
+    architecture: {
+      frontend: {
+        name: "React 19 & Vite Orbital Engine",
+        role: "Kinetic orbital circular navigation hub, tactile 60fps cognitive arena canvases, live telemetry HUD, and 1v1 duel arena.",
+        tech: ["React 19", "TypeScript", "Vite", "TailwindCSS", "Canvas API"],
+      },
+      backend: {
+        name: "Authoritative FastAPI Engine",
+        role: "Procedural problem generation, seeded test determinism, graph BFS minimal move verification, and anti-cheat telemetry scoring.",
+        tech: ["FastAPI", "Python 3.11", "Pydantic", "Pytest", "Uvicorn"],
+      },
+      database: {
+        name: "Telemetry & Duel Replay Store",
+        role: "Low-latency in-memory session cache, psychometric percentile benchmarks, and asynchronous duel ghost replays.",
+        tech: ["Redis / In-Memory Store", "Session Storage", "REST APIs"],
+      },
+      aiModel: {
+        name: "Adaptive Psychometric & DDA Engine",
+        role: "Dynamic difficulty adjustment, fluid intelligence indexing, sub-millisecond impulse reaction calibration, and attention anomaly scoring.",
+        tech: ["Algorithmic Heuristics", "Dynamic Difficulty Scaling", "Telemetry Analytics"],
+      },
+      dataFlow: [
+        "Candidate selects cognitive arena on kinetic orbital navigation hub",
+        "FastAPI procedurally synthesizes seeded cognitive assessment in <10ms",
+        "Micro-telemetry (reaction time, hesitation, clicks) streamed to backend",
+        "Psychometric engine adjusts arena difficulty and updates fluid IQ scorecard",
+      ],
+    },
   },
   {
     name: "ResearchPilot | Autonomous Research Hub",
@@ -44,6 +115,34 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/ResearchPilot-AI",
     color: "from-indigo-600 to-purple-500",
     image: "/images/projects/researchpilot.jpg",
+    architecture: {
+      frontend: {
+        name: "Interactive Research Studio",
+        role: "Force-directed citation network graph, PDF split-screen reader, research Q&A conversation panel, and keyword tag cloud.",
+        tech: ["Next.js", "React", "D3.js / Canvas", "TailwindCSS"],
+      },
+      backend: {
+        name: "FastAPI & LangChain Orchestrator",
+        role: "Document ingestion pipeline, recursive semantic chunking, multi-hop query routing, and citation grounding verification.",
+        tech: ["Python", "FastAPI", "LangChain", "PyMuPDF"],
+      },
+      database: {
+        name: "FAISS Vector Store & Metadata Index",
+        role: "High-density dense semantic embeddings index, paper metadata store, and citation relationship graph mapping.",
+        tech: ["FAISS Vector DB", "SQLite", "Embeddings Cache"],
+      },
+      aiModel: {
+        name: "RAG & LLM Synthesis Pipeline",
+        role: "Sentence transformer embeddings, semantic nearest-neighbor retrieval, automated multi-page summarization, and grounded Q&A.",
+        tech: ["OpenAI GPT-4o / Gemini", "Sentence Transformers", "FAISS", "RAG"],
+      },
+      dataFlow: [
+        "Academic PDF papers uploaded and parsed into structured text sections",
+        "Sentence Transformers generate dense embeddings stored in FAISS vector database",
+        "User asks research query; hybrid semantic retriever pulls top-k grounded passages",
+        "LLM synthesizes response with verified citation links and updates citation graph",
+      ],
+    },
   },
   {
     name: "AVNIET – Smart College Management System",
@@ -55,6 +154,34 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/Adaptive-Learning-Management",
     color: "from-purple-600 to-pink-500",
     image: "/images/projects/avniet.jpg",
+    architecture: {
+      frontend: {
+        name: "Unified Smart Campus Dashboard",
+        role: "Student LMS interface, attendance heatmaps, early risk alerts, and faculty administrative portals.",
+        tech: ["Streamlit", "React", "TailwindCSS", "Chart.js"],
+      },
+      backend: {
+        name: "Python ERP Intelligence Engine",
+        role: "Automated attendance tracking, academic risk scoring algorithms, and administrative workflows.",
+        tech: ["Python", "FastAPI / Flask", "REST APIs", "Pandas"],
+      },
+      database: {
+        name: "Relational ERP & Academic Store",
+        role: "Normalized student records, course catalog, attendance archives, and grading schemas.",
+        tech: ["PostgreSQL / MySQL", "SQLAlchemy", "Database Migrations"],
+      },
+      aiModel: {
+        name: "Predictive Analytics & Recommendation Engine",
+        role: "Early student academic risk classifier and personalized learning pathway recommendations.",
+        tech: ["Scikit-learn", "Collaborative Filtering", "Predictive Analytics"],
+      },
+      dataFlow: [
+        "Daily attendance and semester test score data ingested into ERP system",
+        "Data preprocessing pipeline calculates rolling performance and attendance trends",
+        "ML classifier evaluates academic risk factors and early warning flags",
+        "Recommendations & personalized learning pathways rendered for faculty & students",
+      ],
+    },
   },
   {
     name: "AI CareMatch — Trust-Based Caregiver Intelligence Platform",
@@ -66,6 +193,34 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/AI-CareMatch",
     color: "from-red-600 to-orange-500",
     image: "/images/projects/carematch.jpg",
+    architecture: {
+      frontend: {
+        name: "React.js Trust-Based Matching Portal",
+        role: "Caregiver profiles, 6-dimension match radar visualization, natural language search, and voice queries.",
+        tech: ["React.js", "TailwindCSS", "Lucide Icons", "Web Speech API"],
+      },
+      backend: {
+        name: "Firebase Cloud Functions & Node.js",
+        role: "Serverless REST endpoints, automated background check triggers, and Twilio emergency SOS alerts.",
+        tech: ["Node.js", "Firebase Cloud Functions", "Express", "Twilio API"],
+      },
+      database: {
+        name: "Cloud Firestore & Auth",
+        role: "Secure encrypted caregiver credentials, client requirements, and trust score history.",
+        tech: ["Cloud Firestore", "Firebase Authentication", "Security Rules"],
+      },
+      aiModel: {
+        name: "Explainable AI (XAI) & 6-D Match Engine",
+        role: "Multi-criteria candidate ranking, natural language query parsing via GPT-4o, and transparent trust explanation.",
+        tech: ["OpenAI GPT-4o", "Explainable AI (SHAP/LIME)", "Custom Scoring Engine"],
+      },
+      dataFlow: [
+        "Family enters care requirements via voice or natural language query",
+        "GPT-4o parses intent and extracts 6 matching dimensions (skills, availability, trust)",
+        "Scoring engine ranks verified caregivers and generates transparent XAI explanation",
+        "Secure booking created with one-click Twilio SOS emergency protection active",
+      ],
+    },
   },
   {
     name: "RT-AIDIS | Integrity AI – Real-Time Anomaly Detection Platform",
@@ -77,5 +232,33 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/vaishnavireddy067/RT-AIDIS-IntegrityAI",
     color: "from-orange-500 to-red-500",
     image: "/images/projects/rtaidis.jpg",
+    architecture: {
+      frontend: {
+        name: "Next.js Streaming Telemetry HUD",
+        role: "Live waveform telemetry graphs, anomaly incident logs, and system integrity gauges.",
+        tech: ["Next.js", "TypeScript", "Canvas/SVG", "TailwindCSS"],
+      },
+      backend: {
+        name: "Real-Time Telemetry Pipeline",
+        role: "High-throughput asynchronous stream ingestion, sliding window metric buffers, and alert dispatching.",
+        tech: ["Python", "FastAPI", "WebSockets", "AsyncIO"],
+      },
+      database: {
+        name: "Time-Series Telemetry Store",
+        role: "Sliding-window buffer, telemetry log archives, and fault classification historical snapshots.",
+        tech: ["Redis Time-Series", "TimescaleDB / In-Memory Buffer"],
+      },
+      aiModel: {
+        name: "Real-Time Anomaly & Outlier Detector",
+        role: "Sub-50ms streaming anomaly scoring, isolation forest classifier, and dynamic threshold calibration.",
+        tech: ["Isolation Forest", "NumPy", "Statistical Outlier Models"],
+      },
+      dataFlow: [
+        "IoT telemetry and sensor data streams arrive via WebSockets",
+        "Sliding-window buffer calculates rolling statistical metrics in memory",
+        "Isolation Forest anomaly model scores deviation against normal operational baselines",
+        "Sub-50ms emergency alerts and live waveform visualizer update in real-time",
+      ],
+    },
   },
 ];

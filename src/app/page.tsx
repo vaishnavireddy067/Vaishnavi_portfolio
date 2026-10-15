@@ -19,6 +19,7 @@ import DownloadDropdown from "../components/DownloadDropdown";
 import emailjs from "@emailjs/browser";
 import TechBackground from "../components/TechBackground";
 import LaunchShowcaseLanding from "../components/LaunchShowcaseLanding";
+import InteractiveArchitectureExplorer from "../components/InteractiveArchitectureExplorer";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg className={`${className || ""} pointer-events-none`} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -345,6 +346,7 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
   const [hasEnteredPortfolio, setHasEnteredPortfolio] = useState(false);
+  const [projectViewMode, setProjectViewMode] = useState<"cards" | "architecture">("cards");
 
   // Autoplay photo reel every ~2.2 seconds (runs continuously, pauses only if user clicks pause button or modal is open)
   useEffect(() => {
@@ -727,97 +729,128 @@ export default function Home() {
               <div className="section-eyebrow justify-center mb-3">Projects</div>
               <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--foreground)] font-heading">Featured Projects</h2>
             </div>
-            <div className="flex flex-wrap justify-center gap-6">
-              {PROJECTS.map((proj, idx) => (
-                <div key={idx} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
-                  <GlowCard
-                    className="flex flex-col w-full h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 group"
-                    onClick={() => setSelectedProject(proj)}
-                    aria-label={`Open ${proj.name} details`}
-                  >
-                    {/* Gradient header band */}
-                    <div className={`h-1.5 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
-                    {proj.image && (
-                      <div className="relative w-full h-44 overflow-hidden bg-black/40">
-                        <img 
-                          src={proj.image} 
-                          alt={`${proj.name} preview`} 
-                          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] via-transparent to-transparent opacity-80" />
-                        <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-black/70 backdrop-blur-md text-white/95 border border-white/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          Preview
-                        </div>
-                      </div>
-                    )}
-                    <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
-                      <div>
-                        {/* Title with uniform height */}
-                        <h3 
-                          className="text-base sm:text-lg font-bold text-[var(--foreground)] font-heading mb-2 leading-snug line-clamp-2 h-14 flex items-start" 
-                          title={proj.name}
-                        >
-                          {proj.name}
-                        </h3>
 
-                        {/* Description with uniform height */}
-                        <p className="text-xs sm:text-sm text-[var(--text-muted)] line-clamp-2 font-body leading-relaxed h-10 mb-2.5">
-                          {proj.desc}
-                        </p>
-
-                        {/* Impact highlight with uniform height */}
-                        <div className="h-8 mb-3 flex items-center">
-                          {proj.impact ? (
-                            <p className="text-xs text-[var(--accent)] font-medium font-body line-clamp-2">
-                              {proj.impact}
-                            </p>
-                          ) : <div />}
-                        </div>
-
-                        {/* Tech tags with uniform height */}
-                        <div className="flex flex-wrap gap-1.5 h-7 items-center overflow-hidden mb-3">
-                          {proj.tech.slice(0, 3).map((t: string) => (
-                            <span key={t} className="skill-badge text-[11px] py-0.5 px-2">{t}</span>
-                          ))}
-                          {proj.tech.length > 3 && (
-                            <span className="skill-badge text-[11px] py-0.5 px-1.5">+{proj.tech.length - 3}</span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Footer Actions with aligned buttons */}
-                      <div className="flex items-center gap-2 mt-auto pt-3 border-t border-[var(--border-subtle)] text-xs font-semibold">
-                        {proj.demo && (
-                          <a
-                            href={proj.demo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/15 text-blue-400 hover:bg-blue-600 hover:text-white transition-all border border-blue-500/30 shadow-sm"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" /> Live Demo
-                          </a>
-                        )}
-                        {proj.github && (
-                          <a
-                            href={proj.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:text-white transition-all border border-gray-700/50"
-                          >
-                            <GithubIcon className="w-3.5 h-3.5" /> Source
-                          </a>
-                        )}
-                        <span className="ml-auto text-xs text-[var(--accent)] font-medium group-hover:translate-x-0.5 transition-transform">
-                          Details →
-                        </span>
-                      </div>
-                    </div>
-                  </GlowCard>
-                </div>
-              ))}
+            {/* View Mode Switcher */}
+            <div className="flex items-center justify-center gap-2 pt-1 pb-2">
+              <button
+                onClick={() => setProjectViewMode("cards")}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border flex items-center gap-2 ${
+                  projectViewMode === "cards"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 shadow-md shadow-blue-500/20"
+                    : "bg-[var(--card-bg)] text-[var(--text-muted)] border-[var(--card-border)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)]"
+                }`}
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span>Featured Cards</span>
+              </button>
+              <button
+                onClick={() => setProjectViewMode("architecture")}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border flex items-center gap-2 ${
+                  projectViewMode === "architecture"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 shadow-md shadow-blue-500/20"
+                    : "bg-[var(--card-bg)] text-[var(--text-muted)] border-[var(--card-border)] hover:text-[var(--foreground)] hover:border-[var(--card-hover-border)]"
+                }`}
+              >
+                <Layers className="w-4 h-4" />
+                <span>Interactive Architecture Explorer</span>
+              </button>
             </div>
+
+            {projectViewMode === "architecture" ? (
+              <InteractiveArchitectureExplorer />
+            ) : (
+              <div className="flex flex-wrap justify-center gap-6">
+                {PROJECTS.map((proj, idx) => (
+                  <div key={idx} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
+                    <GlowCard
+                      className="flex flex-col w-full h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 group"
+                      onClick={() => setSelectedProject(proj)}
+                      aria-label={`Open ${proj.name} details`}
+                    >
+                      {/* Gradient header band */}
+                      <div className={`h-1.5 w-full bg-gradient-to-r ${proj.color || 'from-indigo-500 to-violet-500'}`} />
+                      {proj.image && (
+                        <div className="relative w-full h-44 overflow-hidden bg-black/40">
+                          <img 
+                            src={proj.image} 
+                            alt={`${proj.name} preview`} 
+                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" 
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] via-transparent to-transparent opacity-80" />
+                          <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-black/70 backdrop-blur-md text-white/95 border border-white/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Preview
+                          </div>
+                        </div>
+                      )}
+                      <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
+                        <div>
+                          {/* Title with uniform height */}
+                          <h3 
+                            className="text-base sm:text-lg font-bold text-[var(--foreground)] font-heading mb-2 leading-snug line-clamp-2 h-14 flex items-start" 
+                            title={proj.name}
+                          >
+                            {proj.name}
+                          </h3>
+
+                          {/* Description with uniform height */}
+                          <p className="text-xs sm:text-sm text-[var(--text-muted)] line-clamp-2 font-body leading-relaxed h-10 mb-2.5">
+                            {proj.desc}
+                          </p>
+
+                          {/* Impact highlight with uniform height */}
+                          <div className="h-8 mb-3 flex items-center">
+                            {proj.impact ? (
+                              <p className="text-xs text-[var(--accent)] font-medium font-body line-clamp-2">
+                                {proj.impact}
+                              </p>
+                            ) : <div />}
+                          </div>
+
+                          {/* Tech tags with uniform height */}
+                          <div className="flex flex-wrap gap-1.5 h-7 items-center overflow-hidden mb-3">
+                            {proj.tech.slice(0, 3).map((t: string) => (
+                              <span key={t} className="skill-badge text-[11px] py-0.5 px-2">{t}</span>
+                            ))}
+                            {proj.tech.length > 3 && (
+                              <span className="skill-badge text-[11px] py-0.5 px-1.5">+{proj.tech.length - 3}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Footer Actions with aligned buttons */}
+                        <div className="flex items-center gap-2 mt-auto pt-3 border-t border-[var(--border-subtle)] text-xs font-semibold">
+                          {proj.demo && (
+                            <a
+                              href={proj.demo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/15 text-blue-400 hover:bg-blue-600 hover:text-white transition-all border border-blue-500/30 shadow-sm"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                            </a>
+                          )}
+                          {proj.github && (
+                            <a
+                              href={proj.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:text-white transition-all border border-gray-700/50"
+                            >
+                              <GithubIcon className="w-3.5 h-3.5" /> Source
+                            </a>
+                          )}
+                          <span className="ml-auto text-xs text-[var(--accent)] font-medium group-hover:translate-x-0.5 transition-transform">
+                            Details →
+                          </span>
+                        </div>
+                      </div>
+                    </GlowCard>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1414,9 +1447,9 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative transition-all duration-300"
+              className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative transition-all duration-300"
             >
-               <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 z-10 p-2 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full text-white transition-colors">
+               <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 z-20 p-2 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full text-white transition-colors">
                   <X className="w-5 h-5" />
                </button>
                
@@ -1436,7 +1469,7 @@ export default function Home() {
                  </div>
                )}
                
-               <div className="p-8 md:p-10 -mt-10 relative z-10">
+               <div className="p-6 md:p-10 -mt-10 relative z-10">
                   <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--foreground)] mb-4">{selectedProject.name}</h2>
                   
                   <div className="flex flex-wrap gap-2 mb-6">
@@ -1446,7 +1479,14 @@ export default function Home() {
                   </div>
                   
                   <h3 className="text-xl font-bold text-[var(--foreground)] mb-2">Project Overview</h3>
-                  <p className="text-[var(--text-muted)] leading-relaxed mb-8 text-sm md:text-base">{selectedProject.longDesc || selectedProject.desc}</p>
+                  <p className="text-[var(--text-muted)] leading-relaxed mb-6 text-sm md:text-base">{selectedProject.longDesc || selectedProject.desc}</p>
+                  
+                  {/* Interactive Architecture Explorer for Selected Project */}
+                  {selectedProject.architecture && (
+                    <div className="mb-8 pt-6 border-t border-[var(--border-subtle)]">
+                      <InteractiveArchitectureExplorer initialProjectName={selectedProject.name} compact={true} />
+                    </div>
+                  )}
                   
                   <div className="flex flex-col sm:flex-row gap-4">
                      {selectedProject.github && (
