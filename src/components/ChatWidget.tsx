@@ -161,11 +161,12 @@ export default function ChatWidget() {
     }
 
     // 10. Contact & Interview
-    if (q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("hire") || q.includes("reach") || q.includes("interview") || q.includes("linkedin")) {
+    if (q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("hire") || q.includes("reach") || q.includes("interview") || q.includes("linkedin") || q.includes("whatsapp") || q.includes("watsap") || q.includes("msg") || q.includes("message")) {
       return {
         role: "bot",
-        text: `📬 **Let's Connect! Vaishnavi is actively open to AI/ML & SDE roles:**\n\n• **Email**: anuguvaishnavireddy2@gmail.com\n• **Phone**: +91 96523 78004\n• **Location**: Nalgonda / Hyderabad, India (Open to Remote & Relocation)\n• **LinkedIn**: linkedin.com/in/anugu-vaishnavi-651a67353\n• **GitHub**: github.com/vaishnavireddy067`,
+        text: `📬 **Let's Connect! Vaishnavi is actively open to AI/ML & SDE roles:**\n\n• **WhatsApp**: +91 96523 78004 (Direct & Instant)\n• **Email**: anuguvaishnavireddy2@gmail.com\n• **Phone**: +91 96523 78004\n• **Location**: Nalgonda / Hyderabad, India (Open to Remote & Relocation)\n• **LinkedIn**: linkedin.com/in/anugu-vaishnavi-651a67353\n• **GitHub**: github.com/vaishnavireddy067`,
         actions: [
+          { label: "💬 Chat on WhatsApp", href: "https://wa.me/919652378004?text=Hi%20Vaishnavi,%20I'm%20reaching%20out%20from%20your%20portfolio!" },
           { label: "✉️ Send an Email", href: "mailto:anuguvaishnavireddy2@gmail.com" },
           { label: "💼 LinkedIn Profile", href: "https://www.linkedin.com/in/anugu-vaishnavi-651a67353" },
           { label: "🐙 GitHub Profile", href: "https://github.com/vaishnavireddy067" },

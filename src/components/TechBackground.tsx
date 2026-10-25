@@ -161,6 +161,7 @@ export default function TechBackground({ isDark }: { isDark: boolean }) {
     let t = 0;
 
     function hexPath(cx: number, cy: number, r: number) {
+      if (!ctx) return;
       ctx.beginPath();
       for (let i = 0; i < 6; i++) {
         const angle = (Math.PI / 3) * i - Math.PI / 6;
