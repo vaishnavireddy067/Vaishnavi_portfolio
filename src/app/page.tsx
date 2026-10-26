@@ -681,7 +681,7 @@ export default function Home() {
                   </div>
                   
                   <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed font-body">
-                    I am a passionate <strong className="text-[var(--foreground)] font-semibold">AI & ML Builder and Full Stack Developer</strong> driven by the desire to innovate and engineer scalable solutions. As an aspiring <strong className="text-[var(--foreground)] font-semibold">Data Analyst & Software Developer</strong>, my core goal is to build highly functional, intelligent systems that solve real-world challenges by blending robust AI algorithms with intuitive user interfaces. Furthermore, as an active <strong className="text-[var(--foreground)] font-semibold">Public Speaker & Content Creator</strong>, I love sharing my journey, discussing tech trends, and building in public.
+                    I am a passionate <strong className="text-[var(--foreground)] font-semibold">AI & ML Builder and Full Stack Developer</strong> driven by the desire to innovate and engineer scalable solutions. As an aspiring <strong className="text-[var(--foreground)] font-semibold">Data Analyst & Software Developer</strong>, my core goal is to build highly functional, intelligent systems that solve real-world challenges by blending robust AI algorithms with intuitive user interfaces. Furthermore, as an active <strong className="text-[var(--foreground)] font-semibold">Public Speaker</strong>, I love sharing my journey, discussing tech trends, and building in public.
                   </p>
 
                   {/* Highlight Tags */}
